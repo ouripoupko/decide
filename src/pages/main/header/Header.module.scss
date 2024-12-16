@@ -1,0 +1,11 @@
+.header {
+    height: 8.8vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 104" preserveAspectRatio="none"><polygon points="0,0 100,0 100,85 25,100 0,85" fill="white" stroke="none" /><path d="M 0 85 L 25 100 L 100 85" fill="none" stroke="RGB(24, 91, 152)" stroke-width="4" stroke-linecap="square"/></svg>') no-repeat center/cover;
+
+    img {
+        width: 50px;
+    }
+}

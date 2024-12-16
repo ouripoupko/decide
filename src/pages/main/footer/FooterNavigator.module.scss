@@ -1,0 +1,126 @@
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../../../assets/fonts/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf') format('truetype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+.footer {
+  position: relative;
+  padding: 16px; /* Adjusted for better spacing */
+  text-align: center;
+  z-index: 0; /* Ensure it doesn't overlap content */
+  transform: translateY(20px); /* Lowered slightly */
+
+  /* Use ::before for the clipped background */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #165A99;
+    // box-shadow: inset 0 0 0 4px #ffffff; /* Inner border */
+    clip-path: polygon(
+      65% 22%,   /* Roof peak */
+      100% 30%, /* Top-right corner of the roof */
+      100% 100%, /* Bottom-right corner */
+      0% 100%,  /* Bottom-left corner */
+      0% 30%    /* Top-left corner of the roof */
+    );
+    z-index: -1; /* Place behind the content */
+  }
+}
+
+.footerOutline {
+  position: relative;
+  padding: 16px; /* Adjusted for better spacing */
+  text-align: center;
+  z-index: 0; /* Ensure it doesn't overlap content */
+  transform: translateY(60px); /* Lowered slightly to match the footer */
+
+  /* Use ::before for the clipped background */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #ffffff;
+    // box-shadow: inset 0 0 0 4px #ffffff; /* Inner border */
+    clip-path: polygon(
+      65% 40%,   /* Roof peak */
+      100% 65%, /* Top-right corner of the roof */
+      100% 100%, /* Bottom-right corner */
+      0% 100%,  /* Bottom-left corner */
+      0% 65%    /* Top-left corner of the roof */
+    );
+    z-index: -1; /* Place behind the content */
+  }
+}
+
+.navContainer {
+  display: flex;
+  justify-content: center;
+  gap: 32px; /* Fixed gap between items */
+  position: relative;
+  z-index: 1; /* Ensure it stays above the clipped background */
+  transform: translateY(-5px);
+}
+
+.navItem {
+  cursor: pointer;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px; /* Fixed gap between icon and label */
+  transform: translateY(-10px);
+  transition: transform 0.3s ease, color 0.3s ease;
+  min-width: 65px; /* Ensures equal spacing regardless of content size */
+
+  // &:hover {
+    // transform: translateY(-4px);
+  // }
+
+  &.active {
+    .iconWrapper {
+      background-color: #165A99;
+      box-shadow: inset 0 0 0 2px #ffffff;
+
+      img {
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+
+  // Make the third nav item from the right slightly higher
+  &:nth-last-child(2) {
+    transform: translateY(-15px); /* Adjust height for this specific item */
+    gap: 10px;
+  }
+}
+
+.iconWrapper {
+  background-color: white;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  img {
+    width: 16px;
+    height: 16px;
+    transition: filter 0.3s ease;
+    filter: invert(31%) sepia(98%) saturate(1999%) hue-rotate(201deg) brightness(57%) contrast(107%);
+  }
+}
+
+.label {
+  font-size: 13px;
+  font-family: 'DM Sans';
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-align: center;
+  line-height: 1.2; /* Adjust for better spacing */
+}

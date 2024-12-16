@@ -1,0 +1,86 @@
+@use "src/variables.scss" as *;
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+
+    .image-container {
+        width: 170px;
+        height: 170px;
+        margin-top: 4vh;
+        border-radius: 85px;
+        border: 3px solid white;
+        background-color: $comm-grey;
+    }
+
+    .agent-name {
+        margin-top: 1.6vh;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .command-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: calc($gloki-width * 0.063);
+        margin-top: 3.4vh;
+
+        button {
+            width: 92px;
+            height: 30px;
+            border-radius: 33px;
+            border: 1px solid white;
+            background-color: $comm-dark;
+            font-size: 13px;
+            color: white;
+        }
+
+    }
+    .profile-fields {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        width: 100%;
+        padding: 0.3vh calc($gloki-width * 0.102);
+
+        .field-title {
+            font-size: 15px;
+            font-weight: 700;
+            padding: 4.3vh 0px 1.3vh 0px;
+        }
+
+        .field-paragraph {
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        .info {
+            display: inline-block;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: $comm-dark;
+        }
+
+        .field-invert {
+            width: 100%;
+            height: 55px;
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            border-radius: 6px;
+            padding: 12px;
+
+            .field-text {
+                color: $comm-dark;
+                font-size: 20px;
+            }
+        }
+    }
+}

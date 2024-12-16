@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    gap: 10px;
+
+    .filter {
+        padding: 10px;
+        border-radius: 20px;
+        background-color: gray;
+        color: white;
+        cursor: pointer;
+
+        &.selected {
+            background-color: blue;
+        }
+    }
+}
