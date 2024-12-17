@@ -8,11 +8,12 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
   async (credentials) => {
     const { server, agent } = credentials;
     if (agent && server) {
-      return {
+      const reply =  {
         server,
         agent,
         contract: (await readAgentFromServer(server, agent)) as string,
       } as IInvite;
+      return reply;
     }
     return Promise.reject();
   }
@@ -23,6 +24,7 @@ export const readProfile = createAsyncThunk<IProfile, void>(
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server, contract } = state.agent;
+    console.log("read profile contract", contract);
     if (agent && server && contract) {
       return (await readProfileFromServer(server, agent, contract)) as IProfile;
     }
@@ -33,6 +35,7 @@ export const readProfile = createAsyncThunk<IProfile, void>(
 const agentSlice = createSlice({
   name: "agent",
   initialState: {
+    serverError: false,
     agent: undefined as string | undefined,
     server: undefined as string | undefined,
     contract: undefined as string | undefined,
@@ -46,8 +49,14 @@ const agentSlice = createSlice({
         state.server = action.payload.server;
         state.contract = action.payload.contract;
       })
+      .addCase(startAgent.rejected, (state) => {
+        state.serverError = true;
+      })
       .addCase(readProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
+      })
+      .addCase(readProfile.rejected, (state) => {
+        state.serverError = true;
       });
   },
 });

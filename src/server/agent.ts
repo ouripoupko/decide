@@ -1,5 +1,36 @@
 import { IContract, IMethod } from "src/types/interfaces";
 
+export async function isExistAgent(
+  server: string,
+  agent: string
+): Promise<boolean> {
+  const reply = await fetch(
+    `${server}/ibc/app/${agent}?action=is_exist_agent`,
+    {
+      method: "GET",
+    }
+  );
+  return await reply.json();
+}
+
+export async function registerAgent(
+  server: string,
+  agent: string
+): Promise<boolean> {
+  console.log("register agent", agent);
+  const reply = await fetch(
+    `${server}/ibc/app/${agent}?action=register_agent`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ address: server }),
+    }
+  );
+  return await reply.json();
+}
+
 export function listenAgent(
   server: string,
   agent: string,
@@ -23,40 +54,28 @@ export async function getAgentContracts(
   server: string,
   agent: string
 ): Promise<IContract[]> {
-  try {
-    const reply = await fetch(
-      `${server}/ibc/app/${agent}?action=get_contracts`,
-      {
-        method: "GET",
-      }
-    );
-    return await reply.json();
-  } catch (error) {
-    console.error("Error fetching contracts:", error);
-    return [];
-  }
+  const response = await fetch(`${server}/ibc/app/${agent}?action=get_contracts`, {
+    method: "GET",
+  });
+  const reply =  await response.json();
+  console.log("all contracts", reply);
+  return reply;
 }
 
 export async function deployContract(
   server: string,
   agent: string,
   name: string,
-  file_name: string,
+  fileName: string,
+  code: string,
   profile: string | null,
   ctor: any
 ) {
-  let response;
-  try {
-    response = await fetch(`assets/${file_name}`);
-    if (!response.ok) return null;
-  } catch {
-    console.log("failed to read contract file:", file_name);
-    return null;
-  }
+  console.log("deploying contract");
   const contract = {
     name,
-    contract: file_name,
-    code: await response.text(),
+    contract: fileName,
+    code,
     protocol: "BFT",
     default_app: "",
     pid: agent,
@@ -64,18 +83,15 @@ export async function deployContract(
     profile,
     constructor: ctor,
   } as IContract;
-  try {
-    await fetch(`${server}/ibc/app/${agent}?action=deploy_contract`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(contract),
-    });
-  } catch {
-    console.log("failed to deploy contract:", file_name);
-    return null;
-  }
+
+  const response = await fetch(`${server}/ibc/app/${agent}?action=deploy_contract`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(contract),
+  });
+  return response.json();
 }
 
 export async function readAgentContract(
@@ -84,22 +100,19 @@ export async function readAgentContract(
   contract: string,
   method: IMethod
 ) {
-  try {
-    const reply = await fetch(
-      `${server}/ibc/app/${agent}/${contract}/${method.name}?action=contract_read`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(method),
-      }
-    );
-    return await reply.json();
-  } catch (error) {
-    console.error("Error reading contract:", error);
-    return undefined;
-  }
+  const response = await fetch(
+    `${server}/ibc/app/${agent}/${contract}/${method.name}?action=contract_read`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(method),
+    }
+  );
+  const reply = await response.json();
+  console.log("read agent contract", contract, reply);
+  return reply;
 }
 
 export async function writeAgentContract(
@@ -108,20 +121,15 @@ export async function writeAgentContract(
   contract: string,
   method: IMethod
 ) {
-  try {
-    const reply = await fetch(
-      `${server}/ibc/app/${agent}/${contract}/${method.name}?action=contract_write`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(method),
-      }
-    );
-    return await reply.json();
-  } catch (error) {
-    console.error("Error writing to contract:", error);
-    return undefined;
-  }
+  const reply = await fetch(
+    `${server}/ibc/app/${agent}/${contract}/${method.name}?action=contract_write`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(method),
+    }
+  );
+  return await reply.json();
 }

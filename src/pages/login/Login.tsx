@@ -1,10 +1,21 @@
 import { ChangeEvent, useState } from "react";
-import styles from "./Login.module.scss"
+import styles from "./Login.module.scss";
+import { useNavigate } from "react-router-dom";
+
+function isValidUrl(str: string): boolean {
+  try {
+    new URL(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 export default function Login() {
-    console.log('rendering login')
+  const [gloki, setGloki] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([] as string[]);
+  const navigate = useNavigate();
 
   // Sample suggestions
   const options = ["https://gdi.gloki.contact"];
@@ -30,10 +41,30 @@ export default function Login() {
     setSuggestions([]);
   };
 
+  const generateGloki = () => {
+    const pad = new Uint8Array(32);
+    crypto.getRandomValues(pad);
+    setGloki(
+      Array.from(pad, (value) => value.toString(16).padStart(2, "0")).join("")
+    );
+  };
+
+  const login = () => {
+    if (gloki.length > 2 && isValidUrl(inputValue)) {
+      localStorage.setItem("server", inputValue);
+      localStorage.setItem("agent", gloki);
+      const redirectTo =
+        sessionStorage.getItem("redirectAfterLogin") || "/main";
+      sessionStorage.removeItem("redirectAfterLogin");
+      console.log("navigating to", redirectTo);
+      navigate(redirectTo, { replace: true });
+    }
+  };
+
   return (
     <div className={styles["login-container"]}>
-      <div>gloKi: {"tester"}</div>
-      <button>Create</button>
+      <div>gloKi: {gloki}</div>
+      <button onClick={generateGloki}>Create</button>
       <input
         type="text"
         value={inputValue}
@@ -41,31 +72,11 @@ export default function Login() {
         placeholder="Start typing..."
       />
       {suggestions.length > 0 && (
-        <ul
-          style={{
-            listStyle: "none",
-            margin: 0,
-            padding: 0,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            maxHeight: "150px",
-            overflowY: "auto",
-            zIndex: 1000,
-          }}
-        >
+        <ul>
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
-              style={{
-                padding: "8px",
-                cursor: "pointer",
-                backgroundColor: "#f9f9f9",
-              }}
               onMouseOver={(e) =>
                 (e.currentTarget.style.backgroundColor = "#eee")
               }
@@ -78,7 +89,7 @@ export default function Login() {
           ))}
         </ul>
       )}
-      <button>Login</button>
+      <button onClick={login}>Login</button>
     </div>
   );
 }

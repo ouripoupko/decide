@@ -21,6 +21,8 @@ const ProfilePage = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  console.log("rendering profile page", profile);
+
   //               this.listenService.register(this.contract, 'contract_write', _ => this.readProfile());
 
   // Fetch user data on mount
@@ -31,7 +33,9 @@ const ProfilePage = () => {
   }, [dispatch, contract]);
 
   useEffect(() => {
+    console.log("check if empty", profile);
     if (profile && Object.keys(profile).length === 0) {
+      console.log("set edit mode");
       setIsEditMode(true); // Start in edit mode if no data
     }
   }, [profile]);

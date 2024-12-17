@@ -1,21 +1,26 @@
 import { IMethod, IProfile } from "src/types/interfaces";
-import { deployContract, getAgentContracts, readAgentContract, writeAgentContract } from "./agent";
+import { deployContract, getAgentContracts, isExistAgent, readAgentContract, registerAgent, writeAgentContract } from "./agent";
+import profileContract from "src/assets/contracts/decide_profile.py?raw"
 
 const PROFILE_CONTRACT_NAME = "unique-gloki-decide-profile";
-const PROFILE_CONTRACT_FILE = "decide_profile.py";
 
 async function deployProfileContract(server: string, agent: string) {
   return deployContract(
     server,
     agent,
     PROFILE_CONTRACT_NAME,
-    PROFILE_CONTRACT_FILE,
+    "decide_profile.py",
+    profileContract,
     null,
-    null
+    {}
   );
 }
 
 export async function readAgentFromServer(server: string, agent: string) {
+  const isExist = await isExistAgent(server, agent);
+  if (!isExist) {
+    await registerAgent(server, agent);
+  }
   const contracts = await getAgentContracts(server, agent);
   const profileContract = contracts.find(
     (contract) => contract.name === PROFILE_CONTRACT_NAME
