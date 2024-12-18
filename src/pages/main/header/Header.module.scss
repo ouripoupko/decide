@@ -1,11 +1,55 @@
-.header {
-    height: 8.8vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 104" preserveAspectRatio="none"><polygon points="0,0 100,0 100,85 25,100 0,85" fill="white" stroke="none" /><path d="M 0 85 L 25 100 L 100 85" fill="none" stroke="RGB(24, 91, 152)" stroke-width="4" stroke-linecap="square"/></svg>') no-repeat center/cover;
+@font-face {
+    font-family: 'DM Sans';
+    src: url('../../../assets/fonts/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
 
-    img {
-        width: 50px;
-    }
+.headerContainer {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Single height for the container */
+}
+
+.header, .headerOutline {
+    width: 100%;
+    height: 200px;
+    padding: 16px;
+    text-align: center;
+    position: absolute; /* Change to absolute positioning */
+    top: 0;
+    left: 0;
+    clip-path: polygon(
+        100% 29.5%,
+        100% 0%,
+        0% 0%,
+        0% 34.00%,
+        23.55% 45%
+    );
+    display: flex; /* Flexbox to align items */
+    align-items: center; /* Vertically center the icons */
+    justify-content: space-between; /* Space the items out */
+}
+
+.header {
+    background-color: white;
+    z-index: 1;
+}
+
+.headerOutline {
+    background-color: #185B98;
+    z-index: 0;
+    transform: translateY(4px); /* Small offset for outline effect */
+}
+
+.iconContainer {
+    display: flex;
+    align-items:stretch;
+    justify-content: space-between;
+    transform: translateY(-70px);
+    width: 100%;
+}
+  
+.icon {
+    height: auto;
 }
