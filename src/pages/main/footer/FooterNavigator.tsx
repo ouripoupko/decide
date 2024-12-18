@@ -1,6 +1,8 @@
-import React from "react";
 import { EMainPage } from "src/types/enums";
 import styles from "./FooterNavigator.module.scss";
+import React from "react";
+
+// Import your icons
 import profileIcon from 'src/assets/icons/profile-footer-button.svg';
 import communitiesIcon from 'src/assets/icons/communities-footer-button.svg';
 
@@ -23,23 +25,23 @@ const FooterNavigator: React.FC<FooterNavigatorProps> = ({
     {
       icon: profileIcon,
       label: 'Votes',
-      view: EMainPage.Profile,
+      view: EMainPage.Profile
     },
     {
-      icon: communitiesIcon,
+      icon: profileIcon,
       label: 'Issue Areas',
-      view: EMainPage.Communities,
+      view: EMainPage.Communities
     },
     {
       icon: profileIcon,
       label: 'Favorites',
-      view: EMainPage.AddCommunity,
+      view: EMainPage.AddCommunity
     },
     {
       icon: communitiesIcon,
       label: 'Search',
-      view: EMainPage.Find,
-    },
+      view: EMainPage.Find
+    }
   ];
 
   return (
@@ -50,21 +52,13 @@ const FooterNavigator: React.FC<FooterNavigatorProps> = ({
           {navItems.map((item) => (
             <div
               key={item.view}
-              className={`${styles.navItem} ${currentPage === item.view ? styles.active : ""}`}
+              className={`${styles.navItem} ${
+                currentPage === item.view ? styles.active : ""
+              }`}
               onClick={() => setCurrentView(item.view)}
-              onKeyDown={(e) => e.key === 'Enter' && setCurrentView(item.view)}
-              tabIndex={0}
-              role="button"
-              aria-label={`Navigate to ${item.label}`}
             >
               <div className={styles.iconWrapper}>
-                <img
-                  src={item.icon}
-                  alt={item.label}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'src/assets/icons/default-icon.svg';
-                  }}
-                />
+                <img src={item.icon} alt={item.label} />
               </div>
               <span className={styles.label}>{item.label}</span>
             </div>
