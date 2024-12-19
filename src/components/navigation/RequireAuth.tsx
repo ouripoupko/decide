@@ -1,17 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { startAgent } from "src/reducers/AgentSlice";
+import { startAgent } from "src/reducers/GlokiSlice";
 import { listenAgent } from "src/server/agent";
 import { AppDispatch, RootState } from "src/Store";
 import { IInvite } from "src/types/interfaces";
 import Loader from "../ui/loader/Loader";
+import { CompWithChildrenProps } from "src/types/types";
 
-type RequireAuthProps = {
-  children?: React.ReactNode; // Optional children of type React.ReactNode
-};
-
-const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
+const RequireAuth: React.FC<CompWithChildrenProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const hasStarted = useRef(false);
@@ -22,7 +19,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
     // console.log('SSE data:', data)
   };
   const { contract, serverError } = useSelector((state: RootState) => {
-    return state.agent;
+    return state.gloki;
   });
 
   useEffect(() => {

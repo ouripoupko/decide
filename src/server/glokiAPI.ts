@@ -1,15 +1,15 @@
 import { IMethod, IProfile } from "src/types/interfaces";
 import { deployContract, getAgentContracts, isExistAgent, readAgentContract, registerAgent, writeAgentContract } from "./agent";
-import profileContract from "src/assets/contracts/decide_profile.py?raw"
+import profileContract from "src/assets/contracts/gloki_contract.py?raw"
 
-const PROFILE_CONTRACT_NAME = "unique-gloki-decide-profile";
+const PROFILE_CONTRACT_NAME = "unique-gloki-decide-contract";
 
 async function deployProfileContract(server: string, agent: string) {
   return deployContract(
     server,
     agent,
     PROFILE_CONTRACT_NAME,
-    "decide_profile.py",
+    "gloki_contract.py",
     profileContract,
     null,
     {}
