@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { IInvite, IProfile } from "src/types/interfaces";
-import { readAgentFromServer, readProfileFromServer } from "src/server/gloki";
+import {
+  readAgentFromServer,
+  readProfileFromServer,
+} from "src/server/glokiAPI";
 import { RootState } from "src/Store";
 
 export const startAgent = createAsyncThunk<IInvite, IInvite>(
@@ -8,7 +11,7 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
   async (credentials) => {
     const { server, agent } = credentials;
     if (agent && server) {
-      const reply =  {
+      const reply = {
         server,
         agent,
         contract: (await readAgentFromServer(server, agent)) as string,
@@ -23,7 +26,7 @@ export const readProfile = createAsyncThunk<IProfile, void>(
   "agent/readProfile",
   async (_, { getState }) => {
     const state = getState() as RootState;
-    const { agent, server, contract } = state.agent;
+    const { agent, server, contract } = state.gloki;
     console.log("read profile contract", contract);
     if (agent && server && contract) {
       return (await readProfileFromServer(server, agent, contract)) as IProfile;
@@ -32,8 +35,8 @@ export const readProfile = createAsyncThunk<IProfile, void>(
   }
 );
 
-const agentSlice = createSlice({
-  name: "agent",
+const glokiSlice = createSlice({
+  name: "gloki",
   initialState: {
     serverError: false,
     agent: undefined as string | undefined,
@@ -61,4 +64,4 @@ const agentSlice = createSlice({
   },
 });
 
-export default agentSlice.reducer;
+export default glokiSlice.reducer;

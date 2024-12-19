@@ -1,10 +1,10 @@
 // src/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import agentReducer from "./reducers/AgentSlice";
+import glokiReducer from "./reducers/GlokiSlice";
 
 const store = configureStore({
   reducer: {
-    agent: agentReducer,
+    gloki: glokiReducer,
   },
 });
 
