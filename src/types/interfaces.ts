@@ -21,10 +21,10 @@ export interface IMethod {
   values: any;
 }
 
-export interface IPartner {
-  address: string;
+export interface IContact {
+  server: string;
   agent: string;
-  profile: string;
+  contract: string;
 }
 
 export interface IInvite {

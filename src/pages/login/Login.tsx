@@ -56,7 +56,6 @@ export default function Login() {
       const redirectTo =
         sessionStorage.getItem("redirectAfterLogin") || "/main";
       sessionStorage.removeItem("redirectAfterLogin");
-      console.log("navigating to", redirectTo);
       navigate(redirectTo, { replace: true });
     }
   };

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { IInvite, IProfile } from "src/types/interfaces";
+import { IContact, IInvite, IProfile } from "src/types/interfaces";
 import {
+  getContactsFromServer,
   readAgentFromServer,
   readProfileFromServer,
 } from "src/server/glokiAPI";
@@ -27,9 +28,20 @@ export const readProfile = createAsyncThunk<IProfile, void>(
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server, contract } = state.gloki;
-    console.log("read profile contract", contract);
     if (agent && server && contract) {
       return (await readProfileFromServer(server, agent, contract)) as IProfile;
+    }
+    return Promise.reject();
+  }
+);
+
+export const getContacts = createAsyncThunk<IContact[], void>(
+  "agent/getContacts",
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const { agent, server, contract } = state.gloki;
+    if (agent && server && contract) {
+      return (await getContactsFromServer(server, agent, contract)) as IContact[];
     }
     return Promise.reject();
   }
@@ -43,6 +55,7 @@ const glokiSlice = createSlice({
     server: undefined as string | undefined,
     contract: undefined as string | undefined,
     profile: undefined as IProfile | undefined,
+    contacts: undefined as IContact[] | undefined
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -59,6 +72,12 @@ const glokiSlice = createSlice({
         state.profile = action.payload;
       })
       .addCase(readProfile.rejected, (state) => {
+        state.serverError = true;
+      })
+      .addCase(getContacts.fulfilled, (state, action) => {
+        state.contacts = action.payload;
+      })
+      .addCase(getContacts.rejected, (state) => {
         state.serverError = true;
       });
   },

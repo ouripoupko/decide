@@ -76,10 +76,14 @@
             background-color: white;
             border-radius: 6px;
             padding: 12px;
+            gap: 6px;
 
             .field-text {
                 color: $comm-dark;
                 font-size: 20px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
     }

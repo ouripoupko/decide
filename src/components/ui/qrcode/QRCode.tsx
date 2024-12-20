@@ -1,23 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import QRCodeStyling from "qr-code-styling";
+import glokiKey from "src/assets/icons/Key.svg"
 
 const qrCode = new QRCodeStyling({
   width: 300,
   height: 300,
-  image:
-    "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+  image: glokiKey,
   dotsOptions: {
     color: "#4267b2",
     type: "rounded"
   },
   imageOptions: {
     crossOrigin: "anonymous",
-    margin: 20
+    margin: 4
   }
 });
 
-export default function QRCode() {
-  const [url, setUrl] = useState("https://qr-code-styling.com");
+type QRCodeProps = {
+  code: string;
+}
+
+export default function QRCode({code}: QRCodeProps) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -26,9 +29,9 @@ export default function QRCode() {
 
   useEffect(() => {
     qrCode.update({
-      data: url
+      data: code
     });
-  }, [url]);
+  }, [code]);
 
   return (
     <div className="App">

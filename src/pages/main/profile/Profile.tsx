@@ -13,7 +13,7 @@ import ShareDialog from "./ShareDialog";
 const ProfilePage = () => {
   const { agent, server, profile, contract } = useSelector(
     (state: RootState) => {
-      return state?.gloki;
+      return state.gloki;
     }
   );
 
