@@ -17,7 +17,6 @@ export async function registerAgent(
   server: string,
   agent: string
 ): Promise<boolean> {
-  console.log("register agent", agent);
   const reply = await fetch(
     `${server}/ibc/app/${agent}?action=register_agent`,
     {
@@ -58,7 +57,6 @@ export async function getAgentContracts(
     method: "GET",
   });
   const reply =  await response.json();
-  console.log("all contracts", reply);
   return reply;
 }
 
@@ -71,7 +69,6 @@ export async function deployContract(
   profile: string | null,
   ctor: any
 ) {
-  console.log("deploying contract");
   const contract = {
     name,
     contract: fileName,
@@ -111,7 +108,6 @@ export async function readAgentContract(
     }
   );
   const reply = await response.json();
-  console.log("read agent contract", contract, reply);
   return reply;
 }
 
@@ -121,7 +117,7 @@ export async function writeAgentContract(
   contract: string,
   method: IMethod
 ) {
-  const reply = await fetch(
+  const response = await fetch(
     `${server}/ibc/app/${agent}/${contract}/${method.name}?action=contract_write`,
     {
       method: "POST",
@@ -131,5 +127,7 @@ export async function writeAgentContract(
       body: JSON.stringify(method),
     }
   );
-  return await reply.json();
+  const reply = await response.json();
+  console.log('server replied with', reply);
+  return reply;
 }

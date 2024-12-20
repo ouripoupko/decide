@@ -1,4 +1,4 @@
 
 export enum EMainPage {
-    Profile, Communities, AddCommunity, Find
+    Profile, Issues, Favorites, Find
 }

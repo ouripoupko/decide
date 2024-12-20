@@ -5,6 +5,7 @@ import { EMainPage } from "src/types/enums";
 import Profile from "./profile/Profile";
 import FooterNavigator from "./footer/FooterNavigator";
 import QrScan from "./qrscan/QrScan";
+import Favorites from "./favorites/Favorites";
 
 const Main = () => {
   const [currentView, setCurrentView] = useState(EMainPage.Profile);
@@ -14,6 +15,7 @@ const Main = () => {
       <Header></Header>
       <div className={styles["main-content"]}>
         {currentView === EMainPage.Profile && <Profile></Profile>}
+        {currentView === EMainPage.Favorites && <Favorites></Favorites>}
         {currentView === EMainPage.Find && <QrScan></QrScan>}
       </div>
       <FooterNavigator setCurrentView={setCurrentView} currentPage={currentView}></FooterNavigator>

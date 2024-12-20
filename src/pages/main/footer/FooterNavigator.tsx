@@ -30,12 +30,12 @@ const FooterNavigator: React.FC<FooterNavigatorProps> = ({
     {
       icon: profileIcon,
       label: 'Issue Areas',
-      view: EMainPage.Communities
+      view: EMainPage.Issues
     },
     {
       icon: profileIcon,
       label: 'Favorites',
-      view: EMainPage.AddCommunity
+      view: EMainPage.Favorites
     },
     {
       icon: communitiesIcon,
