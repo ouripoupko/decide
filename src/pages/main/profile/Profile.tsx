@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styles from "./Profile.module.scss";
-import { AppDispatch, RootState } from "src/Store";
+import { RootState } from "src/Store";
 import { useEffect, useState } from "react";
-import { readProfile } from "src/reducers/GlokiSlice";
 import { IProfile } from "src/types/interfaces";
 import { writeProfileToServer } from "src/server/glokiAPI";
 import Loader from "src/components/ui/loader/Loader";
@@ -20,17 +19,6 @@ const ProfilePage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState({} as IProfile);
   const [showDialog, setShowDialog] = useState(false);
-
-  const dispatch: AppDispatch = useDispatch();
-
-  //               this.listenService.register(this.contract, 'contract_write', _ => this.readProfile());
-
-  // Fetch user data on mount
-  useEffect(() => {
-    if (contract) {
-      dispatch(readProfile());
-    }
-  }, [dispatch, contract]);
 
   useEffect(() => {
     if (profile && Object.keys(profile).length === 0) {

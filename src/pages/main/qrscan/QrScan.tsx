@@ -35,7 +35,6 @@ const QrScan = () => {
 
   const handleApprove = () => {
     if (server && agent && contract && invite.contract) {
-      console.log('will add contact');
       addContactToServer(server, agent, contract, {
         server: invite.server,
         agent: invite.agent,

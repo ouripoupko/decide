@@ -85,7 +85,6 @@ export async function addContactToServer(
     name: "add_contacts",
     values: { contacts },
   } as IMethod;
-  console.log('will send to server')
   writeAgentContract(server, agent, contract, writeMethod);
 }
 
