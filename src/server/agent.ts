@@ -40,7 +40,6 @@ export function listenAgent(
   );
 
   eventSource.onmessage = (event) => {
-    // console.log("event source:", event);
     listener(event.data);
   };
 
@@ -128,6 +127,5 @@ export async function writeAgentContract(
     }
   );
   const reply = await response.json();
-  console.log('server replied with', reply);
   return reply;
 }
