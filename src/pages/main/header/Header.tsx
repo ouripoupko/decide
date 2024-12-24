@@ -2,18 +2,19 @@ import styles from "./Header.module.scss";
 import hamburgerIcon from "../../../assets/icons/hamburger-menu.svg";
 import glokiIcon from "../../../assets/icons/gloki-logo.svg";
 
-const Header = () => {
+const Header = ({ onMenuToggle }) => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.header}>
         <div className={styles.iconContainer}>
           <img 
-            src={glokiIcon} // Use the imported glokiIcon here
+            src={glokiIcon}
             alt="Logo" 
             className={styles.icon}
           />
-          <img 
-            src={hamburgerIcon} // Use the imported hamburgerIcon here
+          <img
+            onClick={onMenuToggle} // Use the prop to toggle the menu
+            src={hamburgerIcon}
             alt="Menu" 
             className={styles.icon}
           />

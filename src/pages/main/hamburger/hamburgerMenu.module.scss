@@ -1,0 +1,77 @@
+  .menu {
+    position: fixed; /* Ensures it overlays the entire screen */
+    top: 0;          /* Position at the top of the viewport */
+    left: 0;         /* Align to the left of the viewport */
+    background: white;
+    width: 100%;    /* Width of the menu */
+    box-sizing: border-box;
+    min-height: 100vh; /* Full viewport height */
+    padding: 16px;
+    z-index: 1000;   
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for separation */
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  
+  .logo {
+    color: #1e40af;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #1e40af;
+    border-radius: 50%;
+    margin: 0 2px;
+  }
+  
+  .chevron-button {
+    color: #9ca3af;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    margin-bottom: 24px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: #1e40af;
+    font-size: 18px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .bullet {
+    width: 8px;
+    height: 8px;
+    background: #1e40af;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+  
+  .chevron-right {
+    margin-left: auto;
+  }
+  
