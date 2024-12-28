@@ -1,6 +1,8 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import styles from "./hamburgerMenu.module.scss";
+import glokiIcon from "../../../assets/icons/gloki-logo.svg";
+import backIcon from "../../../assets/icons/back-icon.svg"
 
 interface MenuItem {
   id: string;
@@ -27,24 +29,22 @@ const Hamburger: React.FC<HamburgerProps> = ({ onClose }) => {
     <div className={styles.menu}>
       <div className={styles.header}>
         <div className={styles.logo}>
-          gl<span className={styles.dot}></span>ki
+          <img src={glokiIcon}/>
         </div>
-        <button className={styles.closeButton} onClick={onClose}>
-          ✖
-        </button>
+        <img src={backIcon} className={styles.closeButton} onClick={onClose} />
       </div>
 
       <nav>
         <ul className={styles.nav}>
           {menuItems.map(({ id, label, hasChevron }) => (
             <li key={id} className={styles.navItem}>
-              <button className={styles.menuItem}>
+              <div className={styles["menu-item"]}>
                 <span className={styles.bullet}></span>
                 {label}
                 {hasChevron && (
                   <ChevronDown size={20} className={styles.chevronRight} />
                 )}
-              </button>
+              </div>
             </li>
           ))}
         </ul>

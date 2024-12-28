@@ -9,6 +9,7 @@
     padding: 16px;
     z-index: 1000;   
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for separation */
+    transition: transform 0.3s ease, color 0.3s ease;
   }
 
   .header {
@@ -20,25 +21,8 @@
   
   .logo {
     color: #1e40af;
-    font-size: 20px;
-    font-weight: bold;
   }
   
-  .dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: #1e40af;
-    border-radius: 50%;
-    margin: 0 2px;
-  }
-  
-  .chevron-button {
-    color: #9ca3af;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
   
   nav ul {
     list-style: none;
@@ -54,13 +38,15 @@
     display: flex;
     align-items: center;
     width: 100%;
-    color: #1e40af;
     font-size: 18px;
     font-weight: 600;
-    background: none;
     border: none;
-    cursor: pointer;
     text-align: left;
+    color: black;
+
+    &:hover {
+      background-color: gray;
+    }
   }
   
   .bullet {
