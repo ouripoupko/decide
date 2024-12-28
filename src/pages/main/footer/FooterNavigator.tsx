@@ -3,8 +3,10 @@ import styles from "./FooterNavigator.module.scss";
 import React from "react";
 
 // Import your icons
-import profileIcon from 'src/assets/icons/profile-footer-button.svg';
-import communitiesIcon from 'src/assets/icons/communities-footer-button.svg';
+import votesIcon from 'src/assets/icons/votes-footer-icon.svg';
+import issueAreasIcon from 'src/assets/icons/issue-areas-footer-icon.svg';
+import favoritesIcon from 'src/assets/icons/favorites-footer-icon.svg';
+import searchIcon from 'src/assets/icons/search-footer-icon.svg';
 
 interface FooterNavigatorProps {
   setCurrentView: (view: EMainPage) => void;
@@ -23,22 +25,22 @@ const FooterNavigator: React.FC<FooterNavigatorProps> = ({
 }) => {
   const navItems: NavItem[] = [
     {
-      icon: profileIcon,
+      icon: votesIcon,
       label: 'Votes',
       view: EMainPage.Profile
     },
     {
-      icon: profileIcon,
+      icon: issueAreasIcon,
       label: 'Issue Areas',
       view: EMainPage.Issues
     },
     {
-      icon: profileIcon,
+      icon: favoritesIcon,
       label: 'Favorites',
       view: EMainPage.Favorites
     },
     {
-      icon: communitiesIcon,
+      icon: searchIcon,
       label: 'Search',
       view: EMainPage.Find
     }
@@ -46,7 +48,7 @@ const FooterNavigator: React.FC<FooterNavigatorProps> = ({
 
   return (
     <div className={styles.footerContainer}>
-      <div className={styles.footerOutline}></div>
+      <div className={styles.footerOutline}/>
       <div className={styles.footer}>
         <div className={styles.navContainer}>
           {navItems.map((item) => (
