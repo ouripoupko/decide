@@ -10,6 +10,13 @@
     z-index: 1000;   
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for separation */
     transition: transform 0.3s ease, color 0.3s ease;
+
+    &.open {
+      transform: translateX(0%);
+    }
+    &.closed {
+      transform: translateX(-100%);
+    }
   }
 
   .header {

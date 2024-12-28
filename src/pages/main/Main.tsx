@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./Main.module.scss";
 import Header from "./header/Header";
 import { EMainPage } from "src/types/enums";
@@ -12,7 +12,10 @@ const Main = () => {
   const [currentView, setCurrentView] = useState(EMainPage.Profile);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () =>  {
+      setIsMenuOpen(!isMenuOpen);
+      console.log(isMenuOpen, "isMenuOpen");
+  };
 
   return (
     <div className={styles["main-page"]}>
@@ -23,7 +26,9 @@ const Main = () => {
         {currentView === EMainPage.Find && <QrScan />}
       </div>
       <FooterNavigator setCurrentView={setCurrentView} currentPage={currentView} />
-      {isMenuOpen && <HamburgerMenu onClose={toggleMenu} />}
+      <div className={"hamburger-menu-container"}>
+          <HamburgerMenu onClose={toggleMenu} classNameState = {(isMenuOpen ? "open" : "closed")} />
+      </div>
     </div>
   );
 };
