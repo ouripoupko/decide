@@ -88,10 +88,39 @@ export async function addContactToServer(
   writeAgentContract(server, agent, contract, writeMethod);
 }
 
-export async function getContactsFromServer(server: string, agent: string, contract: string) {
+export async function getContactsFromServer(
+  server: string,
+  agent: string,
+  contract: string
+) {
   const method = {
     name: "get_contacts",
-    values: {  },
+    values: {},
+  } as IMethod;
+  return await readAgentContract(server, agent, contract, method);
+}
+
+export async function addIssueToServer(
+  server: string,
+  agent: string,
+  contract: string,
+  issue: string
+) {
+  const writeMethod = {
+    name: "add_issue",
+    values: { contract: issue },
+  } as IMethod;
+  writeAgentContract(server, agent, contract, writeMethod);
+}
+
+export async function getIssuesFromServer(
+  server: string,
+  agent: string,
+  contract: string
+) {
+  const method = {
+    name: "get_issues",
+    values: {},
   } as IMethod;
   return await readAgentContract(server, agent, contract, method);
 }
