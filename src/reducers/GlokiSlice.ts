@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { IContact, IInvite, IProfile } from "src/types/interfaces";
 import {
   getContactsFromServer,
+  getIssuesFromServer,
   readAgentFromServer,
   readProfileFromServer,
 } from "src/server/glokiAPI";
@@ -47,6 +48,22 @@ export const getContacts = createAsyncThunk<IContact[], void>(
   }
 );
 
+export const getIssues = createAsyncThunk<void, void>(
+  "agent/getIssues",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const { agent, server, contract, contacts } = state.gloki;
+    if (agent && server && contract) {
+      dispatch(addIssue(await getIssuesFromServer(server, agent, contract)));
+    }
+    for (const contact of contacts || []) {
+      dispatch(addIssue(await getIssuesFromServer(contact.server, contact.agent, contact.contract)));
+    }
+    return Promise.resolve();
+  }
+);
+
+
 const glokiSlice = createSlice({
   name: "gloki",
   initialState: {
@@ -55,9 +72,13 @@ const glokiSlice = createSlice({
     server: undefined as string | undefined,
     contract: undefined as string | undefined,
     profile: undefined as IProfile | undefined,
-    contacts: undefined as IContact[] | undefined
+    contacts: undefined as IContact[] | undefined,
+    issues: [] as string[]
   },
-  reducers: {},
+  reducers: {    addIssue: (state, action) => {
+    state.issues.push(...action.payload);
+  },
+},
   extraReducers: (builder) => {
     builder
       .addCase(startAgent.fulfilled, (state, action) => {
@@ -83,4 +104,5 @@ const glokiSlice = createSlice({
   },
 });
 
+export const { addIssue } = glokiSlice.actions;
 export default glokiSlice.reducer;

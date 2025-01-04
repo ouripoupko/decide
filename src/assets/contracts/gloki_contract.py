@@ -3,6 +3,7 @@ class Profile:
     def __init__(self):
         self.profile = Storage('profile')['profile']
         self.network = Storage('network')
+        self.issues = Storage('issues')
 
     # profile
     def get_profile(self):
@@ -27,3 +28,10 @@ class Profile:
 
     def get_contacts(self):
         return [self.network[agent].get_dict() for agent in self.network]
+    
+    # issues
+    def add_issue(self, contract):
+        self.issues[contract] = {}
+
+    def get_issues(self):
+        return [key for key in self.issues]
