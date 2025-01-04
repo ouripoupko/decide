@@ -1,8 +1,13 @@
 import styles from "./Header.module.scss";
 import hamburgerIcon from "../../../assets/icons/hamburger-menu.svg";
 import glokiIcon from "../../../assets/icons/gloki-logo.svg";
+import { FC } from "react";
 
-const Header = ({ onMenuToggle }) => {
+interface HeaderProps {
+  onMenuToggle: () => void
+}
+
+const Header: FC<HeaderProps> = ({ onMenuToggle }) => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.header}>
