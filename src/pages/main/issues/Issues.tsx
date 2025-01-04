@@ -1,3 +1,4 @@
+import styles from "./Issues.module.scss";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getIssues } from "src/reducers/GlokiSlice";
@@ -31,16 +32,23 @@ const IssuesPage = () => {
   }, [dispatch, contract, contacts]);
 
   return (
-    <>
-      <input
-        onChange={(e) => updateIssue(e.target.value)}
-        defaultValue={newIssue}
-      ></input>
-      <button onClick={addNewIssue}>Add</button>
-      {issues?.map((issue, index) => (
-        <div key={index}>{issue}</div>
-      ))}
-    </>
+      <div className={styles["issues"]}>
+        <h1 className={styles["title"]}>Issues</h1>
+        <div className={styles["new-issue"]}>
+          <h2 className={styles["input-title"]}> Subject</h2>
+          <textarea className={styles["issue-name-input"]}
+            placeholder="Your point for discussion..."
+            onChange={(e) => updateIssue(e.target.value)}
+            defaultValue={newIssue}
+          ></textarea>
+          <button className={styles["add-issue"] } onClick={addNewIssue}>Submit</button>
+        </div>
+        <div className={styles["issues-list"]}>
+          {issues?.map((issue, index) => (
+              <div className={styles["issue"]} key={index}>{issue}</div>
+          ))}
+        </div>
+      </div>
   );
 };
 
