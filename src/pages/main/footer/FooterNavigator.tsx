@@ -1,6 +1,6 @@
 import { EMainPage } from "src/types/enums";
 import styles from "./FooterNavigator.module.scss";
-import React from "react";
+import { FC } from "react";
 
 // Import your icons
 import votesIcon from 'src/assets/icons/votes-footer-icon.svg';
@@ -19,7 +19,7 @@ interface NavItem {
   view: EMainPage;
 }
 
-const FooterNavigator: React.FC<FooterNavigatorProps> = ({
+const FooterNavigator: FC<FooterNavigatorProps> = ({
   setCurrentView,
   currentPage
 }) => {

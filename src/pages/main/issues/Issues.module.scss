@@ -1,0 +1,68 @@
+@use '@fontsource/dm-sans';
+
+.issues {
+  padding: 16px;
+  .title {
+      font-size: 30px;
+    font-family: 'DM sans', 'serif';
+  }
+  .new-issue {
+    .input-title {
+      font-size: 20px;
+      font-family: 'DM sans', 'serif';
+    }
+    .issue-name-input {
+      margin: 0 auto;
+      display: flex;
+      width: 100%;
+      horiz-align: center;
+      min-height: 120px;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      resize: none;
+      outline: none;
+
+      &::placeholder {
+        color: rgba(0,0,0,0.2);
+        border-radius: 16px;
+        font-weight: bold;
+      }
+    }
+    .add-issue {
+      margin-top: 16px;
+      display: flex;
+      justify-content: right;
+      color: white;
+      background-color: transparent;
+      font-size: 20px;
+      padding: 10px;
+      font-family: 'DM sans', 'serif';
+      border-radius: 26px;
+      border: 2px solid white;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+  .issues-list {
+    .issue {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid white;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      &:last-child {
+        border-bottom: none; // Removes the border from the last item
+      }
+    }
+  }
+}

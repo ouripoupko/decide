@@ -25,7 +25,7 @@ const Main = () => {
         {currentView === EMainPage.Profile && <Profile />}
         {currentView === EMainPage.Issues && <Issues />}
         {currentView === EMainPage.Favorites && <Favorites />}
-        {currentView === EMainPage.Find && <QrScan />}
+        {currentView === EMainPage.Find && <QrScan setCurrentView={setCurrentView}/>}
       </div>
       <FooterNavigator
         setCurrentView={setCurrentView}
