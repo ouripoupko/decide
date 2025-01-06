@@ -42,7 +42,11 @@ export const getContacts = createAsyncThunk<IContact[], void>(
     const state = getState() as RootState;
     const { agent, server, contract } = state.gloki;
     if (agent && server && contract) {
-      return (await getContactsFromServer(server, agent, contract)) as IContact[];
+      return (await getContactsFromServer(
+        server,
+        agent,
+        contract
+      )) as IContact[];
     }
     return Promise.reject();
   }
@@ -52,17 +56,29 @@ export const getIssues = createAsyncThunk<void, void>(
   "agent/getIssues",
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
-    const { agent, server, contract, contacts } = state.gloki;
-    if (agent && server && contract) {
-      dispatch(addIssue(await getIssuesFromServer(server, agent, contract)));
-    }
-    for (const contact of contacts || []) {
-      dispatch(addIssue(await getIssuesFromServer(contact.server, contact.agent, contact.contract)));
+    const { agent, server, contract, contacts, isIssuesLoading } = state.gloki;
+    if(!isIssuesLoading) {
+      dispatch(clearIssues());
+
+      if (agent && server && contract) {
+        getIssuesFromServer(server, agent, contract).then((value) => {
+          dispatch(addIssue(value));
+        });
+      }
+      const promises = (contacts || []).map((contact) =>
+        getIssuesFromServer(contact.server, contact.agent, contact.contract).then(
+          (value) => {
+            dispatch(addIssue(value)); // Dispatch for each result
+          }
+        )
+      );
+
+      // Wait for all promises to resolve
+      await Promise.all(promises);
     }
     return Promise.resolve();
   }
 );
-
 
 const glokiSlice = createSlice({
   name: "gloki",
@@ -73,12 +89,18 @@ const glokiSlice = createSlice({
     contract: undefined as string | undefined,
     profile: undefined as IProfile | undefined,
     contacts: undefined as IContact[] | undefined,
-    issues: [] as string[]
+    issues: [] as string[],
+    isIssuesLoading: false
   },
-  reducers: {    addIssue: (state, action) => {
-    state.issues.push(...action.payload);
+  reducers: {
+    addIssue: (state, action) => {
+      state.issues.push(...action.payload);
+    },
+    clearIssues: (state) => {
+      state.issues = [];
+      state.isIssuesLoading = true;
+    },
   },
-},
   extraReducers: (builder) => {
     builder
       .addCase(startAgent.fulfilled, (state, action) => {
@@ -100,9 +122,15 @@ const glokiSlice = createSlice({
       })
       .addCase(getContacts.rejected, (state) => {
         state.serverError = true;
+      })
+      .addCase(getIssues.fulfilled, (state) => {
+        state.isIssuesLoading = false;
+      })
+      .addCase(getIssues.rejected, (state) => {
+        state.isIssuesLoading = false;
       });
   },
 });
 
-export const { addIssue } = glokiSlice.actions;
+export const { addIssue, clearIssues } = glokiSlice.actions;
 export default glokiSlice.reducer;
