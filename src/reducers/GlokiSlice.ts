@@ -9,7 +9,7 @@ import {
 import { RootState } from "src/Store";
 
 export const startAgent = createAsyncThunk<IInvite, IInvite>(
-  "agent/startAgent",
+  "gloki/startAgent",
   async (credentials) => {
     const { server, agent } = credentials;
     if (agent && server) {
@@ -25,7 +25,7 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
 );
 
 export const readProfile = createAsyncThunk<IProfile, void>(
-  "agent/readProfile",
+  "gloki/readProfile",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server, contract } = state.gloki;
@@ -37,7 +37,7 @@ export const readProfile = createAsyncThunk<IProfile, void>(
 );
 
 export const getContacts = createAsyncThunk<IContact[], void>(
-  "agent/getContacts",
+  "gloki/getContacts",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server, contract } = state.gloki;
@@ -53,7 +53,7 @@ export const getContacts = createAsyncThunk<IContact[], void>(
 );
 
 export const getIssues = createAsyncThunk<void, void>(
-  "agent/getIssues",
+  "gloki/getIssues",
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
     const { agent, server, contract, contacts, isIssuesLoading } = state.gloki;
