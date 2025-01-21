@@ -1,6 +1,6 @@
 import styles from "./Header.module.scss";
-import hamburgerIcon from "../../../assets/icons/hamburger-menu.svg";
-import glokiIcon from "../../../assets/icons/gloki-logo.svg";
+import hamburgerIcon from "src/assets/icons/hamburger-menu.svg";
+import glokiIcon from "src/assets/icons/gloki-logo.svg";
 import { FC } from "react";
 
 interface HeaderProps {

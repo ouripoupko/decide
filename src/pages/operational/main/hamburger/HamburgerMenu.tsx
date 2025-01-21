@@ -1,8 +1,8 @@
 import React from "react";
 import {ChevronDown} from "lucide-react";
 import styles from "./hamburgerMenu.module.scss";
-import glokiIcon from "../../../assets/icons/gloki-logo.svg";
-import backIcon from "../../../assets/icons/back-icon.svg"
+import glokiIcon from "src/assets/icons/gloki-logo.svg";
+import backIcon from "src/assets/icons/back-icon.svg"
 
 interface MenuItem {
     id: string;

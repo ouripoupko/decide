@@ -4,8 +4,8 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import Main from "./pages/main/Main";
-import Login from "src/pages/login/Login";
+import Main from "./pages/operational/main/Main";
+import Login from "src/pages/functional/login/Login";
 import RequireAuth from "./components/navigation/RequireAuth";
 
 const router = createBrowserRouter(

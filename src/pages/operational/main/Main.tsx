@@ -2,12 +2,12 @@ import { useState } from "react";
 import styles from "./Main.module.scss";
 import Header from "./header/Header";
 import { EMainPage } from "src/types/enums";
-import Profile from "./profile/Profile";
+import Profile from "../../functional/profile/Profile";
 import FooterNavigator from "./footer/FooterNavigator";
-import QrScan from "./qrscan/QrScan";
-import Favorites from "./favorites/Favorites";
+import QrScan from "../../functional/qrscan/QrScan";
+import Favorites from "../../functional/favorites/Favorites";
 import HamburgerMenu from "./hamburger/HamburgerMenu";
-import Issues from "./issues/Issues";
+import Issues from "../../functional/issues/Issues";
 
 const Main = () => {
   const [currentView, setCurrentView] = useState(EMainPage.Profile);
