@@ -1,0 +1,70 @@
+  .menu {
+    position: fixed; /* Ensures it overlays the entire screen */
+    top: 0;          /* Position at the top of the viewport */
+    left: 0;         /* Align to the left of the viewport */
+    background: white;
+    width: 100%;    /* Width of the menu */
+    box-sizing: border-box;
+    min-height: 100vh; /* Full viewport height */
+    padding: 16px;
+    z-index: 1000;   
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for separation */
+    transition: transform 0.3s ease, color 0.3s ease;
+
+    &.open {
+      transform: translateX(0%);
+    }
+    &.closed {
+      transform: translateX(-100%);
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  
+  .logo {
+    color: #1e40af;
+  }
+  
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    margin-bottom: 24px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    text-align: left;
+    color: black;
+
+    &:hover {
+      background-color: gray;
+    }
+  }
+  
+  .bullet {
+    width: 8px;
+    height: 8px;
+    background: #1e40af;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+  
+  .chevron-right {
+    margin-left: auto;
+  }
+  

@@ -7,6 +7,7 @@ import {
 import Main from "./pages/operational/main/Main";
 import Login from "src/pages/functional/login/Login";
 import RequireAuth from "./components/navigation/RequireAuth";
+import PageTree from "./pages/operational/pagetree/PageTree";
 
 const router = createBrowserRouter(
   [
@@ -21,6 +22,14 @@ const router = createBrowserRouter(
     {
       path: "/",
       element: <Navigate to="/main" replace />,
+    },
+    {
+      path: "/tree",
+      element: (
+        <RequireAuth>
+          <PageTree />
+        </RequireAuth>
+      ),
     },
     {
       path: "/login",
