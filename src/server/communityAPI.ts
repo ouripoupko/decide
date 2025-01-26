@@ -4,6 +4,7 @@ import {
 } from "./agent";
 import wotContract from "src/assets/contracts/wot_community_contract.py?raw";
 import gossipContract from "src/assets/contracts/gossip_community_contract.py?raw";
+import { deployCurrencyToServer } from "./currencyAPI";
 
 export enum ECommunityType {
   WotCommunity,
@@ -26,6 +27,7 @@ export async function deployCommunityToServer(
   name: string,
   type: ECommunityType
 ) {
+  await deployCurrencyToServer(server, agent, name);
   return deployContract(
     server,
     agent,

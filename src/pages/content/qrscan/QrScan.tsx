@@ -9,18 +9,16 @@ import {
 import { addContactToServer } from "src/server/glokiAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "src/Store";
-import { FC, useState } from "react";
-import { EMainPage } from "src/types/enums";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface QrScanProps {
-  setCurrentView: (view: EMainPage) => void;
-}
-
-const QrScan: FC<QrScanProps>  = ({setCurrentView}) => {
+const QrScan = () => {
   const { agent, server, contract } = useSelector((state: RootState) => {
     return state?.gloki;
   });
   const [invite, setInvite] = useState({} as IInvite);
+  const navigate = useNavigate();
+
 
   const handleResult = (data: string) => {
     const result = stringToUint8Array(data, "latin1");
@@ -44,7 +42,7 @@ const QrScan: FC<QrScanProps>  = ({setCurrentView}) => {
         contract: invite.contract,
       });
     }
-    setCurrentView(EMainPage.Favorites);
+    navigate("favorites");
   };
 
   const inviteExists = Object.keys(invite).length > 0;

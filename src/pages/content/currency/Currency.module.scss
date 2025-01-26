@@ -1,0 +1,79 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background-color: #001F3F; /* Dark blue background */
+    color: #FFFFFF; /* White text */
+    min-height: 100vh;
+  }
+  
+  .header {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .balanceSection {
+    font-size: 18px;
+    margin-bottom: 24px;
+    padding: 8px;
+    background-color: #003366;
+    border-radius: 8px;
+  }
+  
+  .transferSection,
+  .parametersSection {
+    margin-bottom: 24px;
+    background-color: #FFFFFF; /* White section */
+    padding: 16px;
+    border-radius: 8px;
+    color: #000000;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #007BFF; /* Blue button */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .parameterRow {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+  
+  .parameterLabel {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  .parameterValues {
+    margin-bottom: 8px;
+  }
+  

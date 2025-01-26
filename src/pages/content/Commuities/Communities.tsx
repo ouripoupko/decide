@@ -7,18 +7,15 @@ import {
   deployCommunityToServer,
   ECommunityType,
 } from "src/server/communityAPI";
-import { createSelector } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 const ItemsList = () => {
   const dispatch: AppDispatch = useDispatch();
-  const selectCommunityNames = createSelector(
-    (state: RootState) => state.communities.contracts,
-    (contracts) => contracts.map((contract) => contract.name)
-  );
-  const communities = useSelector(selectCommunityNames);
+  const communities = useSelector((state: RootState) => state.communities.contracts);
   const { agent, server } = useSelector((state: RootState) => state.gloki);
 
   const [newItemName, setNewItemName] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(readCommunities());
@@ -59,8 +56,8 @@ const ItemsList = () => {
       </div>
       <ul className={styles.list}>
         {communities.map((item, index) => (
-          <li key={index} className={styles.listItem}>
-            {item}
+          <li key={index} className={styles.listItem} onClick={()=>navigate(`/community/${item.id}`)}>
+            {item.name}
           </li>
         ))}
       </ul>
