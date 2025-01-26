@@ -4,10 +4,16 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import Main from "./pages/operational/main/Main";
-import Login from "src/pages/functional/login/Login";
+import GdiMain from "./pages/containers/gdiMain/GdiMain";
+import Login from "src/pages/content/login/Login";
 import RequireAuth from "./components/navigation/RequireAuth";
-import PageTree from "./pages/operational/pagetree/PageTree";
+import Individual from "./pages/containers/individual/Individual";
+import Currency from "./pages/content/currency/Currency";
+import Community from "./pages/containers/community/Community";
+import Profile from "./pages/content/profile/Profile";
+import Issues from "./pages/content/issues/Issues";
+import Favorites from "./pages/content/favorites/Favorites";
+import QrScan from "./pages/content/qrscan/QrScan";
 
 const router = createBrowserRouter(
   [
@@ -15,21 +21,49 @@ const router = createBrowserRouter(
       path: "/main",
       element: (
         <RequireAuth>
-          <Main />
+          <GdiMain />
         </RequireAuth>
       ),
+      children: [
+        { index: true, element: <Navigate to="profile" replace /> },
+        { path: "profile", element: <Profile /> },
+        { path: "issues", element: <Issues /> },
+        { path: "favorites", element: <Favorites /> },
+        { path: "find", element: <QrScan /> },
+      ],
     },
     {
       path: "/",
       element: <Navigate to="/main" replace />,
     },
     {
-      path: "/tree",
+      path: "/me",
       element: (
         <RequireAuth>
-          <PageTree />
+          <Individual />
         </RequireAuth>
       ),
+      children: [
+        { index: true, element: <Navigate to="profile" replace /> },
+        { path: "profile", element: <Profile></Profile> },
+        { path: "communities", element: <div>members</div> },
+      ],
+    },
+    {
+      path: "/community/:id",
+      element: (
+        <RequireAuth>
+          <Community />
+        </RequireAuth>
+      ),
+      children: [
+        { index: true, element: <Navigate to="issues" replace /> }, // Redirect to "issues" by default
+        { path: "issues", element: <div>issues</div> },
+        { path: "members", element: <div>members</div> },
+        { path: "projects", element: <div>projects</div> },
+        { path: "decisions", element: <div>decisions</div> },
+        { path: "currency", element: <Currency /> },
+      ],
     },
     {
       path: "/login",

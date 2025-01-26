@@ -1,12 +1,12 @@
 import { useState } from "react";
-import styles from "./PageTree.module.scss";
+import styles from "./Individual.module.scss";
 import Header from "./header/Header";
 import { EPages } from "src/types/enums";
-import Profile from "../../functional/profile/Profile";
+import Profile from "../../content/profile/Profile";
 import HamburgerMenu from "./hamburger/HamburgerMenu";
-import Communities from "src/pages/functional/Commuities/Communities";
+import Communities from "src/pages/content/Commuities/Communities";
 
-const PageTree = () => {
+const Individual = () => {
   const [currentView, setCurrentView] = useState(EPages.Profile);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -19,8 +19,8 @@ const PageTree = () => {
     <div className={styles["main-page"]}>
       <Header onMenuToggle={toggleMenu} />
       <div className={styles["main-content"]}>
-      {currentView === EPages.Profile && <Profile />}
-      {currentView === EPages.Communities && <Communities />}
+        {currentView === EPages.Profile && <Profile />}
+        {currentView === EPages.Communities && <Communities />}
       </div>
       <div className={"hamburger-menu-container"}>
         <HamburgerMenu
@@ -33,4 +33,4 @@ const PageTree = () => {
   );
 };
 
-export default PageTree;
+export default Individual;
