@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import styles from "./Currency.module.scss";
 import { readAccount, readPartners } from "src/reducers/currencySlice";
 import { AppDispatch, RootState } from "src/Store";
-import { setParameters, transfer } from "src/server/currencyAPI";
+import { setParametersToServer, transfer } from "src/server/currencyAPI";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -14,10 +14,10 @@ const Currency = () => {
   const [burnPreference, setBurnPreference] = useState("");
   const [mintPreference, setMintPreference] = useState("");
 
-  const { balance, preferences, parameters } = useSelector(
+  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const { contract, balance, preferences, parameters, partners } = useSelector(
     (state: RootState) => state.currency
   );
-  const partners = useSelector((state: RootState) => state.currency.partners);
 
   useEffect(() => {
     dispatch(readAccount());
@@ -36,11 +36,19 @@ const Currency = () => {
   };
 
   const handleUpdatePreferences = async () => {
-    try {
-      await setParameters(Number(mintPreference), Number(burnPreference));
-      dispatch(readAccount()); // Refresh account details
-    } catch (error) {
-      console.error("Failed to update preferences:", error);
+    if (server && agent && contract) {
+      try {
+        await setParametersToServer(
+          server,
+          agent,
+          contract,
+          Number(mintPreference),
+          Number(burnPreference)
+        );
+        dispatch(readAccount()); // Refresh account details
+      } catch (error) {
+        console.error("Failed to update preferences:", error);
+      }
     }
   };
 

@@ -15,7 +15,7 @@ export const readCommunities = createAsyncThunk<IContract[], void>(
   }
 );
 
-const communitySlice = createSlice({
+const communitiesSlice = createSlice({
   name: "communities",
   initialState: {
     contracts: [] as IContract[],
@@ -28,4 +28,4 @@ const communitySlice = createSlice({
   },
 });
 
-export default communitySlice.reducer;
+export default communitiesSlice.reducer;

@@ -1,4 +1,4 @@
-import { IContract, IMethod } from "src/types/interfaces";
+import { IContract, IMethod, IInvite } from "src/types/interfaces";
 
 export async function isExistAgent(
   server: string,
@@ -52,10 +52,28 @@ export async function getAgentContracts(
   server: string,
   agent: string
 ): Promise<IContract[]> {
-  const response = await fetch(`${server}/ibc/app/${agent}?action=get_contracts`, {
-    method: "GET",
-  });
-  const reply =  await response.json();
+  const response = await fetch(
+    `${server}/ibc/app/${agent}?action=get_contracts`,
+    {
+      method: "GET",
+    }
+  );
+  const reply = await response.json();
+  return reply;
+}
+
+export async function getAgentContract(
+  server: string,
+  agent: string,
+  contract: string
+): Promise<IContract> {
+  const response = await fetch(
+    `${server}/ibc/app/${agent}/${contract}?action=get_contract`,
+    {
+      method: "GET",
+    }
+  );
+  const reply = await response.json();
   return reply;
 }
 
@@ -80,13 +98,42 @@ export async function deployContract(
     constructor: ctor,
   } as IContract;
 
-  const response = await fetch(`${server}/ibc/app/${agent}?action=deploy_contract`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(contract),
+  const response = await fetch(
+    `${server}/ibc/app/${agent}?action=deploy_contract`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(contract),
+    }
+  );
+  return response.json();
+}
+
+export async function joinContract(
+  server: string,
+  agent: string,
+  invite: IInvite,
+  profile?: string
+) {
+  const body = JSON.stringify({
+    address: invite.server,
+    agent: invite.agent,
+    contract: invite.contract,
+    profile: profile || "",
   });
+  console.log(body);
+  const response = await fetch(
+    `${server}/ibc/app/${agent}?action=join_contract`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    }
+  );
   return response.json();
 }
 

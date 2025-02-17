@@ -9,7 +9,7 @@ import {
 } from "./agent";
 import profileContract from "src/assets/contracts/gloki_contract.py?raw";
 
-const PROFILE_CONTRACT_NAME = "unique-gloki-decide-contract";
+export const PROFILE_CONTRACT_NAME = "unique-gloki-decide-contract";
 
 async function deployProfileContract(server: string, agent: string) {
   return deployContract(

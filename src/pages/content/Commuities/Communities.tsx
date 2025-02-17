@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "./Communities.module.scss";
-import { readCommunities } from "src/reducers/CommunitySlice";
+import { readCommunities } from "src/reducers/communitiesSlice";
 import { AppDispatch, RootState } from "src/Store";
 import {
   deployCommunityToServer,
@@ -11,7 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 const ItemsList = () => {
   const dispatch: AppDispatch = useDispatch();
-  const communities = useSelector((state: RootState) => state.communities.contracts);
+  const communities = useSelector(
+    (state: RootState) => state.communities.contracts
+  );
   const { agent, server } = useSelector((state: RootState) => state.gloki);
 
   const [newItemName, setNewItemName] = useState("");
@@ -56,7 +58,11 @@ const ItemsList = () => {
       </div>
       <ul className={styles.list}>
         {communities.map((item, index) => (
-          <li key={index} className={styles.listItem} onClick={()=>navigate(`/community/${item.id}`)}>
+          <li
+            key={index}
+            className={styles.listItem}
+            onClick={() => navigate(`/community/${item.id}`)}
+          >
             {item.name}
           </li>
         ))}

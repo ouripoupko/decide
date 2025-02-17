@@ -1,34 +1,32 @@
-import { useState } from "react";
 import styles from "./Individual.module.scss";
-import Header from "./header/Header";
-import { EPages } from "src/types/enums";
-import Profile from "../../content/profile/Profile";
-import HamburgerMenu from "./hamburger/HamburgerMenu";
-import Communities from "src/pages/content/Commuities/Communities";
+import { NavLink, Outlet } from "react-router-dom";
 
 const Individual = () => {
-  const [currentView, setCurrentView] = useState(EPages.Profile);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    console.log(isMenuOpen, "isMenuOpen");
-  };
+  const navItems = [
+    { path: 'profile', label: 'Profile' },
+    { path: 'communities', label: 'Communities' },
+    { path: 'find', label: 'Find' },
+  ];
 
   return (
-    <div className={styles["main-page"]}>
-      <Header onMenuToggle={toggleMenu} />
-      <div className={styles["main-content"]}>
-        {currentView === EPages.Profile && <Profile />}
-        {currentView === EPages.Communities && <Communities />}
-      </div>
-      <div className={"hamburger-menu-container"}>
-        <HamburgerMenu
-          onClose={toggleMenu}
-          setPage={setCurrentView}
-          classNameState={isMenuOpen ? "open" : "closed"}
-        />
-      </div>
+    <div className={styles.container}>
+      <nav className={styles.navBar}>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
+            }
+          >
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
+      <main className={styles.content}>
+        <Outlet />
+      </main>
     </div>
   );
 };

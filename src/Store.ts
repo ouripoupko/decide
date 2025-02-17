@@ -1,13 +1,15 @@
 // src/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import glokiReducer from "./reducers/GlokiSlice";
-import communityReducer from "./reducers/CommunitySlice";
+import communitiesReducer from "./reducers/communitiesSlice";
+import communityReducer from "./reducers/communitySlice";
 import currencyReducer from "./reducers/currencySlice";
 
 const store = configureStore({
   reducer: {
     gloki: glokiReducer,
-    communities: communityReducer,
+    communities: communitiesReducer,
+    community: communityReducer,
     currency: currencyReducer,
   },
 });

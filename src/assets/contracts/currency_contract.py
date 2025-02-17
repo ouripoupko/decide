@@ -8,28 +8,31 @@ class Currency:
             self.accounts['centralAccount'] = {'balanceOf':0, 'creationTime': creationTime, 'elapsedDays': 0}
             self.accounts[master()] = {'balanceOf':0, 'creationTime': creationTime, 'elapsedDays': 0}
 
-    def updateBalance(self, account):
-        account_data = self.accounts[account].to_dict()
+    def check_balance(self, account, update = False):
+        account_data = self.accounts[account].get_dict()
         # to count days divide by 86400. for testing, divide by 60
-        daysPassed = elapsed_time(account_data['creationTime'], timestamp()) // 60 - account_data['elapsedDays']
-        if daysPassed <= 0:
-            return
+        time_passed = elapsed_time(account_data['creationTime'], timestamp()) / 60
+        days_passed = round(time_passed - 0.5) - account_data['elapsedDays']
+        if days_passed <= 0:
+            return account_data['balanceOf']
 
-        burnFactor = 100 - parameter('burn')
-        mint = parameter('mint')
-        for i in range(daysPassed):
+        burnFactor = (100 - parameters('burn')) / 100
+        mint = parameters('mint')
+        for i in range(days_passed):
             account_data['balanceOf'] *= burnFactor
             account_data['balanceOf'] += mint
-        account_data['elapsedDays'] += daysPassed
-        self.accounts[account] = account_data
+        account_data['elapsedDays'] += days_passed
+        if update:
+            self.accounts[account] = account_data
+        return account_data['balanceOf']
 
     def transfer(self, to, value):
         sender = master()
-        self.updateBalance(sender)
-        self.updateBalance(to)
+        self.check_balance(sender, True)
+        self.check_balance(to, True)
 
-        sender_account = self.accounts[sender].to_dict()
-        to_account = self.accounts[to].to_dict()
+        sender_account = self.accounts[sender].get_dict()
+        to_account = self.accounts[to].get_dict()
         if sender_account['balanceOf'] >= value:
             sender_account['balanceOf'] -= value
             to_account['balanceOf'] += value
@@ -38,11 +41,10 @@ class Currency:
             return True
         return False
 
-    def getBalance(self):
+    def get_balance(self):
         account = master()
-        self.updateBalance(account)
-        return self.accounts[account]['balanceOf']
+        return self.check_balance(account)
 
     def before_parameters_update(self):
         for account in self.accounts:
-            self.updateBalance(account)
+            self.check_balance(account, True)
