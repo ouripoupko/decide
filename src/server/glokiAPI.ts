@@ -9,9 +9,9 @@ import {
 } from "./agent";
 import profileContract from "src/assets/contracts/gloki_contract.py?raw";
 
-const PROFILE_CONTRACT_NAME = "unique-gloki-decide-contract";
+export const PROFILE_CONTRACT_NAME = "unique-gloki-decide-contract";
 
-async function deployProfileContract(server: string, agent: string) {
+export async function deployProfileContract(server: string, agent: string) {
   return deployContract(
     server,
     agent,
@@ -25,14 +25,11 @@ async function deployProfileContract(server: string, agent: string) {
 
 export async function readAgentFromServer(server: string, agent: string) {
   const isExist = await isExistAgent(server, agent);
+  console.log('agent exists:', isExist);
   if (!isExist) {
     await registerAgent(server, agent);
   }
-  const contracts = await getAgentContracts(server, agent);
-  const profileContract = contracts.find(
-    (contract) => contract.name === PROFILE_CONTRACT_NAME
-  );
-  return profileContract?.id || (await deployProfileContract(server, agent));
+  return await getAgentContracts(server, agent);
 }
 
 export async function readProfileFromServer(

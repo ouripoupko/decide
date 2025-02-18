@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import styles from "./Currency.module.scss";
 import { readAccount, readPartners } from "src/reducers/currencySlice";
 import { AppDispatch, RootState } from "src/Store";
-import { setParameters, transfer } from "src/server/currencyAPI";
+import { setParametersToServer, transfer } from "src/server/currencyAPI";
+import { joinContract } from "src/server/agent";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -13,13 +14,15 @@ const Currency = () => {
   const [recipient, setRecipient] = useState("");
   const [burnPreference, setBurnPreference] = useState("");
   const [mintPreference, setMintPreference] = useState("");
+  const [joinRequested, setJoinRequested] = useState(false);
 
-  const { balance, preferences, parameters } = useSelector(
+  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const { invite, contractExists, balance, preferences, parameters, partners } = useSelector(
     (state: RootState) => state.currency
   );
-  const partners = useSelector((state: RootState) => state.currency.partners);
 
   useEffect(() => {
+    console.log('calling readAccount');
     dispatch(readAccount());
     dispatch(readPartners());
   }, [dispatch, id]);
@@ -36,15 +39,30 @@ const Currency = () => {
   };
 
   const handleUpdatePreferences = async () => {
-    try {
-      await setParameters(Number(mintPreference), Number(burnPreference));
-      dispatch(readAccount()); // Refresh account details
-    } catch (error) {
-      console.error("Failed to update preferences:", error);
+    if (server && agent && invite?.contract) {
+      try {
+        await setParametersToServer(
+          server,
+          agent,
+          invite.contract,
+          Number(mintPreference),
+          Number(burnPreference)
+        );
+        dispatch(readAccount()); // Refresh account details
+      } catch (error) {
+        console.error("Failed to update preferences:", error);
+      }
     }
   };
 
-  return (
+  const joinCurrency = async () => {
+    if (server && agent && invite) {
+      setJoinRequested(true);
+      await joinContract(server, agent, invite);
+    }
+  }
+
+  return contractExists ? (
     <div className={styles.container}>
       <h1 className={styles.header}>Account Balance</h1>
       <div className={styles.balanceSection}>Balance: {balance} coins</div>
@@ -107,6 +125,8 @@ const Currency = () => {
         </button>
       </div>
     </div>
+  ) : (
+    <button disabled={joinRequested} onClick={joinCurrency}>Join</button>
   );
 };
 

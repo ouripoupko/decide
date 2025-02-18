@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { IContact, IInvite, IProfile } from "src/types/interfaces";
+import { IContract, IContact, IInvite, IProfile } from "src/types/interfaces";
 import {
+  deployProfileContract,
   getContactsFromServer,
   getIssuesFromServer,
+  PROFILE_CONTRACT_NAME,
   readAgentFromServer,
   readProfileFromServer,
 } from "src/server/glokiAPI";
@@ -10,13 +12,21 @@ import { RootState } from "src/Store";
 
 export const startAgent = createAsyncThunk<IInvite, IInvite>(
   "gloki/startAgent",
-  async (credentials) => {
+  async (credentials, { dispatch }) => {
     const { server, agent } = credentials;
     if (agent && server) {
+      const contracts = await readAgentFromServer(server, agent);
+      console.log('agent contracts:', contracts);
+      dispatch(setAllContracts(contracts));
+      const profileContract = contracts.find(
+        (contract) => contract.name === PROFILE_CONTRACT_NAME
+      );
       const reply = {
         server,
         agent,
-        contract: (await readAgentFromServer(server, agent)) as string,
+        contract:
+          profileContract?.id ||
+          ((await deployProfileContract(server, agent)) as string),
       } as IInvite;
       return reply;
     }
@@ -57,7 +67,7 @@ export const getIssues = createAsyncThunk<void, void>(
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
     const { agent, server, contract, contacts, isIssuesLoading } = state.gloki;
-    if(!isIssuesLoading) {
+    if (!isIssuesLoading) {
       dispatch(clearIssues());
 
       if (agent && server && contract) {
@@ -66,11 +76,13 @@ export const getIssues = createAsyncThunk<void, void>(
         });
       }
       const promises = (contacts || []).map((contact) =>
-        getIssuesFromServer(contact.server, contact.agent, contact.contract).then(
-          (value) => {
-            dispatch(addIssue(value)); // Dispatch for each result
-          }
-        )
+        getIssuesFromServer(
+          contact.server,
+          contact.agent,
+          contact.contract
+        ).then((value) => {
+          dispatch(addIssue(value)); // Dispatch for each result
+        })
       );
 
       // Wait for all promises to resolve
@@ -88,11 +100,15 @@ const glokiSlice = createSlice({
     server: undefined as string | undefined,
     contract: undefined as string | undefined,
     profile: undefined as IProfile | undefined,
+    allContracts: [] as IContract[],
     contacts: undefined as IContact[] | undefined,
     issues: [] as string[],
-    isIssuesLoading: false
+    isIssuesLoading: false,
   },
   reducers: {
+    setAllContracts: (state, action) => {
+      state.allContracts = action.payload;
+    },
     addIssue: (state, action) => {
       state.issues.push(...action.payload);
     },
@@ -132,5 +148,5 @@ const glokiSlice = createSlice({
   },
 });
 
-export const { addIssue, clearIssues } = glokiSlice.actions;
+export const { setAllContracts, addIssue, clearIssues } = glokiSlice.actions;
 export default glokiSlice.reducer;

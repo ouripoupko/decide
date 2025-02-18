@@ -1,15 +1,39 @@
-@use "src/variables.scss" as *;
-
-.main-page {
-    width: 100%;
-    height: 100%;
-    background-color: $comm-dark;
-    color: white;
+.container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-
-    .main-content {
-        flex-grow: 1;
-    }
-}
+    min-height: 100vh;
+    background-color: #001F3F;
+  }
+  
+  .navBar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #001F3F; /* Dark blue */
+    padding: 16px;
+  }
+  
+  .navItem {
+    color: #FFFFFF; /* White text */
+    text-decoration: none;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .navItem:hover {
+    background-color: #0056b3; /* Lighter blue */
+  }
+  
+  .active {
+    background-color: #007BFF; /* Active state blue */
+    font-weight: bold;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 16px;
+    background-color: #001F3F;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

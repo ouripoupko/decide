@@ -11,9 +11,11 @@ import Individual from "./pages/containers/individual/Individual";
 import Currency from "./pages/content/currency/Currency";
 import Community from "./pages/containers/community/Community";
 import Profile from "./pages/content/profile/Profile";
+import Communities from "./pages/content/Commuities/Communities"
 import Issues from "./pages/content/issues/Issues";
 import Favorites from "./pages/content/favorites/Favorites";
 import QrScan from "./pages/content/qrscan/QrScan";
+import ShareContract from "./pages/content/share/ShareContract";
 
 const router = createBrowserRouter(
   [
@@ -45,8 +47,9 @@ const router = createBrowserRouter(
       ),
       children: [
         { index: true, element: <Navigate to="profile" replace /> },
-        { path: "profile", element: <Profile></Profile> },
-        { path: "communities", element: <div>members</div> },
+        { path: "profile", element: <Profile /> },
+        { path: "communities", element: <Communities /> },
+        { path: "find", element: <QrScan /> },
       ],
     },
     {
@@ -63,6 +66,7 @@ const router = createBrowserRouter(
         { path: "projects", element: <div>projects</div> },
         { path: "decisions", element: <div>decisions</div> },
         { path: "currency", element: <Currency /> },
+        { path: "share", element: <ShareContract /> },
       ],
     },
     {

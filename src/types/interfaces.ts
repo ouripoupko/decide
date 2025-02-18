@@ -19,6 +19,7 @@ export interface IMethod {
   name: string;
   arguments: string[];
   values: any;
+  parameters: any;
 }
 
 export interface IContact {

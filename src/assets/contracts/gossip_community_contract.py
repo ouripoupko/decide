@@ -6,9 +6,16 @@ class Community:
         self.nominates = self.db['nominates']
         self.approvals = self.db['approvals']
         self.properties = self.db['properties']
+        self.sub_contracts = self.db['sub_contracts']
 
     def set_instructions(self, instructions):
         self.properties['instructions'] = instructions
+    
+    def set_sub_contract(self, name, invite):
+        self.sub_contracts[name] = invite
+
+    def get_sub_contract(self, name):
+        return self.sub_contracts[name]
 
     def get_all(self):
         return {'tasks': self.get_tasks(),

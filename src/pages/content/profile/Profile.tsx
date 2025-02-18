@@ -7,7 +7,7 @@ import { writeProfileToServer } from "src/server/glokiAPI";
 import Loader from "src/components/ui/loader/Loader";
 import EditProfile from "./EditProfile";
 import ViewProfile from "./ViewProfile";
-import ShareDialog from "./ShareDialog";
+import ShareContract from "../share/ShareContract";
 
 const ProfilePage = () => {
   const { agent, server, profile, contract } = useSelector(
@@ -44,7 +44,7 @@ const ProfilePage = () => {
           </div>
         </EditProfile>
       ) : showDialog ? (
-        <ShareDialog setClose={() => setShowDialog(false)}></ShareDialog>
+        <ShareContract setClose={() => setShowDialog(false)} contractProp={contract}></ShareContract>
       ) : (
         <ViewProfile>
           <div className={styles["command-buttons"]}>
