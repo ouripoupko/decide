@@ -10,7 +10,6 @@ import { addContactToServer, PROFILE_CONTRACT_NAME } from "src/server/glokiAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "src/Store";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAgentContract } from "src/server/agent";
 import { communityContractType, ECommunityType, joinCommunityContract } from "src/server/communityAPI";
 
@@ -20,7 +19,6 @@ const QrScan = () => {
   });
   const [invite, setInvite] = useState({} as IInvite);
   const [contractObject, setContractObject] = useState({} as IContract);
-  const navigate = useNavigate();
 
   const handleResult = async (data: string) => {
     const result = stringToUint8Array(data, "latin1");

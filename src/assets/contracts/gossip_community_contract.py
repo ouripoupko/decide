@@ -11,8 +11,8 @@ class Community:
     def set_instructions(self, instructions):
         self.properties['instructions'] = instructions
     
-    def set_sub_contract(self, name, contract):
-        self.sub_contracts[name] = contract
+    def set_sub_contract(self, name, invite):
+        self.sub_contracts[name] = invite
 
     def get_sub_contract(self, name):
         return self.sub_contracts[name]

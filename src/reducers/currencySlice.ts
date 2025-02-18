@@ -1,21 +1,43 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getCurrencyContractFromServer } from "src/server/communityAPI";
-import { getBalanceFromServer, getParametersFromServer } from "src/server/currencyAPI";
+import {
+  getBalanceFromServer,
+  getParametersFromServer,
+} from "src/server/currencyAPI";
 import { RootState } from "src/Store";
+import { IInvite } from "src/types/interfaces";
 
 export const readAccount = createAsyncThunk<any, void>(
   "currency/readAccount",
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
-    const { agent, server } = state.gloki;
+    const { agent, server, allContracts } = state.gloki;
     const community = state.community.contract;
+    console.log('entering readAccount', agent, server, community);
+    console.log("all contracts:", allContracts);
     if (agent && server && community) {
-      const currency = await getCurrencyContractFromServer(server, agent, community);
-      if (currency) {
-        dispatch(setContract(currency))
-        const balance = await getBalanceFromServer(server, agent, currency);
-        const {parameters, medians} = await getParametersFromServer(server, agent, currency);
-        return { balance, medians, parameters };
+      const invite = (await getCurrencyContractFromServer(
+        server,
+        agent,
+        community
+      )) as IInvite;
+      console.log("invite:", invite);
+      if (invite && invite.contract) {
+        dispatch(setInvite(invite));
+        if (allContracts.some((contract) => contract.id === invite.contract)) {
+          dispatch(setContractExists(true));
+          const balance = await getBalanceFromServer(
+            server,
+            agent,
+            invite.contract
+          );
+          const { parameters, medians } = await getParametersFromServer(
+            server,
+            agent,
+            invite.contract
+          );
+          return { balance, medians, parameters };
+        }
       }
     }
     return Promise.reject();
@@ -37,15 +59,19 @@ export const readPartners = createAsyncThunk<any, void>(
 const currencySlice = createSlice({
   name: "currency",
   initialState: {
-    contract: undefined as string | undefined,
+    invite: undefined as IInvite | undefined,
+    contractExists: false,
     balance: 0,
     parameters: { mint: 0, burn: 0 },
     preferences: { mint: 0, burn: 0 },
     partners: [],
   },
   reducers: {
-    setContract: (state, action) => {
-      state.contract = action.payload;
+    setInvite: (state, action) => {
+      state.invite = action.payload;
+    },
+    setContractExists: (state, action) => {
+      state.contractExists = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -57,5 +83,5 @@ const currencySlice = createSlice({
   },
 });
 
-export const { setContract } = currencySlice.actions;
+export const { setInvite, setContractExists } = currencySlice.actions;
 export default currencySlice.reducer;

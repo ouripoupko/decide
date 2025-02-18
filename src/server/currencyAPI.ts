@@ -1,13 +1,13 @@
 import currencyContract from "src/assets/contracts/currency_contract.py?raw";
 import { deployContract, readAgentContract, writeAgentContract } from "./agent";
-import { IInvite, IMethod } from "src/types/interfaces";
+import { IMethod } from "src/types/interfaces";
 
 export async function deployCurrencyToServer(
   server: string,
   agent: string,
   name: string
 ) {
-  return deployContract(
+  const contract = await deployContract(
     server,
     agent,
     name,
@@ -16,6 +16,7 @@ export async function deployCurrencyToServer(
     null,
     {}
   );
+  return contract;
 }
 
 export async function transfer(to: string, amount: number) {
@@ -61,5 +62,5 @@ export async function getParametersFromServer(
   return await readAgentContract(server, agent, contract, method);
 }
 
-export async function joinCurrencyContract(server: string, agent: string, invite: IInvite) {
-}
+// export async function joinCurrencyContract(server: string, agent: string, invite: IInvite) {
+// }

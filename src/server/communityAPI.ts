@@ -41,34 +41,44 @@ export async function deployCommunityToServer(
     null,
     {}
   );
-    const writeMethod = {
-      name: "set_sub_contract",
-      values: { name: "currency", contract: currency },
-    } as IMethod;
-    writeAgentContract(server, agent, community, writeMethod);
-  
-  return community
+  const writeMethod = {
+    name: "set_sub_contract",
+    values: { name: "currency", invite: { server, agent, contract: currency } },
+  } as IMethod;
+  writeAgentContract(server, agent, community, writeMethod);
+
+  return community;
 }
 
-export async function getCurrencyContractFromServer(server: string, agent: string, contract: string) {
-    const method = {
-      name: "get_sub_contract",
-      values: {name: "currency"},
-    } as IMethod;
-    return await readAgentContract(server, agent, contract, method);
+export async function getCurrencyContractFromServer(
+  server: string,
+  agent: string,
+  contract: string
+) {
+  const method = {
+    name: "get_sub_contract",
+    values: { name: "currency" },
+  } as IMethod;
+  return await readAgentContract(server, agent, contract, method);
 }
 
 export async function readCommunitiesFromServer(server: string, agent: string) {
   const contracts = await getAgentContracts(server, agent);
   const profileContracts = contracts.filter(
     (contract) =>
-      contract.contract === communityContractType[ECommunityType.WotCommunity] ||
-      contract.contract === communityContractType[ECommunityType.GossipCommunity]
+      contract.contract ===
+        communityContractType[ECommunityType.WotCommunity] ||
+      contract.contract ===
+        communityContractType[ECommunityType.GossipCommunity]
   );
   return profileContracts;
 }
 
-export async function joinCommunityContract(server: string, agent: string, invite: IInvite) {
-  console.log('joining community');
+export async function joinCommunityContract(
+  server: string,
+  agent: string,
+  invite: IInvite
+) {
+  console.log("joining community");
   await joinContract(server, agent, invite);
 }
