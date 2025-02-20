@@ -11,6 +11,7 @@ const Community = () => {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
+    console.log('initializing community');
     dispatch(setContract(id));
   }, [dispatch, id]);
 

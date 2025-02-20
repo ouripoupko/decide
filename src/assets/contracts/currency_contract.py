@@ -4,11 +4,10 @@ class Currency:
     def __init__(self):
         self.accounts = Storage('accounts')
         if 'centralAccount' not in self.accounts:
-            creationTime = timestamp()
-            self.accounts['centralAccount'] = {'balanceOf':0, 'creationTime': creationTime, 'elapsedDays': 0}
+            self.accounts['centralAccount'] = {'balanceOf':0, 'creationTime': timestamp(), 'elapsedDays': 0}
 
     def create_account(self):
-        self.accounts[master()] = {'balanceOf':0, 'creationTime': creationTime, 'elapsedDays': 0}
+        self.accounts[master()] = {'balanceOf':0, 'creationTime': timestamp(), 'elapsedDays': 0}
 
     def check_balance(self, account, update = False):
         account_data = self.accounts[account].get_dict()

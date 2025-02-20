@@ -4,8 +4,11 @@ import { useParams } from "react-router-dom";
 import styles from "./Currency.module.scss";
 import { readAccount, readPartners } from "src/reducers/currencySlice";
 import { AppDispatch, RootState } from "src/Store";
-import { setParametersToServer, transfer } from "src/server/currencyAPI";
-import { joinContract } from "src/server/agent";
+import {
+  joinCurrencyContract,
+  setParametersToServer,
+  transfer,
+} from "src/server/currencyAPI";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,15 +20,19 @@ const Currency = () => {
   const [joinRequested, setJoinRequested] = useState(false);
 
   const { server, agent } = useSelector((state: RootState) => state.gloki);
-  const { invite, contractExists, balance, preferences, parameters, partners } = useSelector(
-    (state: RootState) => state.currency
+  const communityContract = useSelector(
+    (state: RootState) => state.community.contract
   );
+  const { invite, contractExists, balance, preferences, parameters, partners } =
+    useSelector((state: RootState) => state.currency);
 
   useEffect(() => {
-    console.log('calling readAccount');
-    dispatch(readAccount());
-    dispatch(readPartners());
-  }, [dispatch, id]);
+    console.log("calling readAccount");
+    if (communityContract) {
+      dispatch(readAccount());
+      dispatch(readPartners());
+    }
+  }, [dispatch, id, communityContract]);
 
   const handleTransfer = async () => {
     if (!transferAmount || !recipient) return;
@@ -58,9 +65,9 @@ const Currency = () => {
   const joinCurrency = async () => {
     if (server && agent && invite) {
       setJoinRequested(true);
-      await joinContract(server, agent, invite);
+      await joinCurrencyContract(server, agent, invite);
     }
-  }
+  };
 
   return contractExists ? (
     <div className={styles.container}>
@@ -126,7 +133,9 @@ const Currency = () => {
       </div>
     </div>
   ) : (
-    <button disabled={joinRequested} onClick={joinCurrency}>Join</button>
+    <button disabled={joinRequested} onClick={joinCurrency}>
+      Join
+    </button>
   );
 };
 
