@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import styles from "./Currency.module.scss";
-import { readAccount, readPartners } from "src/reducers/currencySlice";
+import { readAccount, readAccountsList } from "src/reducers/currencySlice";
 import { AppDispatch, RootState } from "src/Store";
-import { setParametersToServer, transfer } from "src/server/currencyAPI";
-import { joinContract } from "src/server/agent";
+import {
+  joinCurrencyContract,
+  setParametersToServer,
+  transfer,
+} from "src/server/currencyAPI";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { id } = useParams();
   const [transferAmount, setTransferAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [burnPreference, setBurnPreference] = useState("");
@@ -17,24 +18,29 @@ const Currency = () => {
   const [joinRequested, setJoinRequested] = useState(false);
 
   const { server, agent } = useSelector((state: RootState) => state.gloki);
-  const { invite, contractExists, balance, preferences, parameters, partners } = useSelector(
-    (state: RootState) => state.currency
+  const communityContract = useSelector(
+    (state: RootState) => state.community.contract
   );
+  const { invite, contractExists, balance, preferences, parameters, partners } =
+    useSelector((state: RootState) => state.currency);
 
   useEffect(() => {
-    console.log('calling readAccount');
-    dispatch(readAccount());
-    dispatch(readPartners());
-  }, [dispatch, id]);
+    if (communityContract) {
+      dispatch(readAccount());
+    }
+  }, [dispatch, communityContract]);
+
+  useEffect(() => {
+    if (invite) {
+      dispatch(readAccountsList());
+    }
+  }, [dispatch, invite]);
 
   const handleTransfer = async () => {
-    if (!transferAmount || !recipient) return;
-    try {
-      await transfer(recipient, Number(transferAmount));
+    if (server && agent && invite?.contract && transferAmount && recipient) {
+      await transfer(server, agent, invite.contract, recipient, Number(transferAmount));
       setTransferAmount(""); // Clear input after successful transfer
       dispatch(readAccount()); // Refresh account details
-    } catch (error) {
-      console.error("Failed to transfer:", error);
     }
   };
 
@@ -58,9 +64,9 @@ const Currency = () => {
   const joinCurrency = async () => {
     if (server && agent && invite) {
       setJoinRequested(true);
-      await joinContract(server, agent, invite);
+      await joinCurrencyContract(server, agent, invite);
     }
-  }
+  };
 
   return contractExists ? (
     <div className={styles.container}>
@@ -126,7 +132,9 @@ const Currency = () => {
       </div>
     </div>
   ) : (
-    <button disabled={joinRequested} onClick={joinCurrency}>Join</button>
+    <button disabled={joinRequested} onClick={joinCurrency}>
+      Join
+    </button>
   );
 };
 

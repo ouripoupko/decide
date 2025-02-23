@@ -25,7 +25,6 @@ export async function deployProfileContract(server: string, agent: string) {
 
 export async function readAgentFromServer(server: string, agent: string) {
   const isExist = await isExistAgent(server, agent);
-  console.log('agent exists:', isExist);
   if (!isExist) {
     await registerAgent(server, agent);
   }

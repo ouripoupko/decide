@@ -16,7 +16,6 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
     const { server, agent } = credentials;
     if (agent && server) {
       const contracts = await readAgentFromServer(server, agent);
-      console.log('agent contracts:', contracts);
       dispatch(setAllContracts(contracts));
       const profileContract = contracts.find(
         (contract) => contract.name === PROFILE_CONTRACT_NAME

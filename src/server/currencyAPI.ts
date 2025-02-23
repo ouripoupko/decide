@@ -1,6 +1,12 @@
 import currencyContract from "src/assets/contracts/currency_contract.py?raw";
-import { deployContract, readAgentContract, writeAgentContract } from "./agent";
-import { IMethod } from "src/types/interfaces";
+import {
+  deployContract,
+  joinContract,
+  readAgentContract,
+  writeAgentContract,
+} from "./agent";
+import { IInvite, IMethod } from "src/types/interfaces";
+import { callbackRegistry } from "src/reducers/serverListener";
 
 export async function deployCurrencyToServer(
   server: string,
@@ -16,11 +22,39 @@ export async function deployCurrencyToServer(
     null,
     {}
   );
+  const method = {
+    name: "create_account",
+    values: {},
+  } as IMethod;
+  writeAgentContract(server, agent, contract, method);
+
   return contract;
 }
 
-export async function transfer(to: string, amount: number) {
-  console.log(to, amount);
+export async function transfer(
+  server: string,
+  agent: string,
+  contract: string,
+  to: string,
+  value: number
+) {
+  const method = {
+    name: "transfer",
+    values: { to, value },
+  } as IMethod;
+  return await writeAgentContract(server, agent, contract, method);
+}
+
+export async function getAccountsFromServer(
+  server: string,
+  agent: string,
+  contract: string
+) {
+  const method = {
+    name: "get_accounts",
+    values: {},
+  } as IMethod;
+  return await readAgentContract(server, agent, contract, method);
 }
 
 export async function getBalanceFromServer(
@@ -62,5 +96,21 @@ export async function getParametersFromServer(
   return await readAgentContract(server, agent, contract, method);
 }
 
-// export async function joinCurrencyContract(server: string, agent: string, invite: IInvite) {
-// }
+export async function joinCurrencyContract(
+  server: string,
+  agent: string,
+  invite: IInvite
+) {
+  if (invite.contract) {
+    callbackRegistry.onJoin[invite.contract] = () => {
+      if (invite.contract) {
+        const method = {
+          name: "create_account",
+          values: {},
+        } as IMethod;
+        writeAgentContract(server, agent, invite.contract, method);
+      }
+    };
+    joinContract(server, agent, invite);
+  }
+}
