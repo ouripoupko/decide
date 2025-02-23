@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getCurrencyContractFromServer } from "src/server/communityAPI";
 import {
+  getAccountsFromServer,
   getBalanceFromServer,
   getParametersFromServer,
 } from "src/server/currencyAPI";
@@ -13,15 +14,12 @@ export const readAccount = createAsyncThunk<any, void>(
     const state = getState() as RootState;
     const { agent, server, allContracts } = state.gloki;
     const community = state.community.contract;
-    console.log('entering readAccount', agent, server, community);
-    console.log("all contracts:", allContracts);
     if (agent && server && community) {
       const invite = (await getCurrencyContractFromServer(
         server,
         agent,
         community
       )) as IInvite;
-      console.log("invite:", invite);
       if (invite && invite.contract) {
         dispatch(setInvite(invite));
         if (allContracts.some((contract) => contract.id === invite.contract)) {
@@ -44,13 +42,15 @@ export const readAccount = createAsyncThunk<any, void>(
   }
 );
 
-export const readPartners = createAsyncThunk<any, void>(
-  "currency/readPartners",
+export const readAccountsList = createAsyncThunk<any, void>(
+  "currency/readAccountsList",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server } = state.gloki;
-    if (agent && server) {
-      return { balance: 0, parameters: {}, preferences: {} };
+    const invite = state.currency.invite;
+    if (agent && server && invite.contract) {
+      const accounts = await getAccountsFromServer(server, agent, invite.contract);
+      return accounts;
     }
     return Promise.reject();
   }
@@ -59,7 +59,7 @@ export const readPartners = createAsyncThunk<any, void>(
 const currencySlice = createSlice({
   name: "currency",
   initialState: {
-    invite: undefined as IInvite | undefined,
+    invite: {} as IInvite,
     contractExists: false,
     balance: 0,
     parameters: { mint: 0, burn: 0 },
@@ -79,6 +79,9 @@ const currencySlice = createSlice({
       state.balance = action.payload.balance;
       state.parameters = action.payload.medians;
       state.preferences = action.payload.parameters;
+    });
+    builder.addCase(readAccountsList.fulfilled, (state, action) => {
+      state.partners = action.payload;
     });
   },
 });

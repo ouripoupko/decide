@@ -79,6 +79,5 @@ export async function joinCommunityContract(
   agent: string,
   invite: IInvite
 ) {
-  console.log("joining community");
   await joinContract(server, agent, invite);
 }

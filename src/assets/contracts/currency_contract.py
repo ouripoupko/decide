@@ -7,12 +7,12 @@ class Currency:
             self.accounts['centralAccount'] = {'balanceOf':0, 'creationTime': timestamp(), 'elapsedDays': 0}
 
     def create_account(self):
-        self.accounts[master()] = {'balanceOf':0, 'creationTime': timestamp(), 'elapsedDays': 0}
+        self.accounts[master()] = {'balanceOf':1000, 'creationTime': timestamp(), 'elapsedDays': 0}
 
     def check_balance(self, account, update = False):
         account_data = self.accounts[account].get_dict()
         # to count days divide by 86400. for testing, divide by 60
-        time_passed = elapsed_time(account_data['creationTime'], timestamp()) / 60
+        time_passed = elapsed_time(account_data['creationTime'], timestamp()) / 600
         days_passed = round(time_passed - 0.5) - account_data['elapsedDays']
         if days_passed <= 0:
             return account_data['balanceOf']
@@ -49,3 +49,6 @@ class Currency:
     def before_parameters_update(self):
         for account in self.accounts:
             self.check_balance(account, True)
+
+    def get_accounts(self):
+        return [account for account in self.accounts]

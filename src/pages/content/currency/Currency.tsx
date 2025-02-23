@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import styles from "./Currency.module.scss";
-import { readAccount, readPartners } from "src/reducers/currencySlice";
+import { readAccount, readAccountsList } from "src/reducers/currencySlice";
 import { AppDispatch, RootState } from "src/Store";
 import {
   joinCurrencyContract,
@@ -12,7 +11,6 @@ import {
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { id } = useParams();
   const [transferAmount, setTransferAmount] = useState("");
   const [recipient, setRecipient] = useState("");
   const [burnPreference, setBurnPreference] = useState("");
@@ -27,21 +25,22 @@ const Currency = () => {
     useSelector((state: RootState) => state.currency);
 
   useEffect(() => {
-    console.log("calling readAccount");
     if (communityContract) {
       dispatch(readAccount());
-      dispatch(readPartners());
     }
-  }, [dispatch, id, communityContract]);
+  }, [dispatch, communityContract]);
+
+  useEffect(() => {
+    if (invite) {
+      dispatch(readAccountsList());
+    }
+  }, [dispatch, invite]);
 
   const handleTransfer = async () => {
-    if (!transferAmount || !recipient) return;
-    try {
-      await transfer(recipient, Number(transferAmount));
+    if (server && agent && invite?.contract && transferAmount && recipient) {
+      await transfer(server, agent, invite.contract, recipient, Number(transferAmount));
       setTransferAmount(""); // Clear input after successful transfer
       dispatch(readAccount()); // Refresh account details
-    } catch (error) {
-      console.error("Failed to transfer:", error);
     }
   };
 

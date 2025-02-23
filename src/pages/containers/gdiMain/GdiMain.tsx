@@ -10,7 +10,6 @@ const GdiMain = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    console.log(isMenuOpen, "isMenuOpen");
   };
 
   return (

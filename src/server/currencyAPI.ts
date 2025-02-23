@@ -31,8 +31,30 @@ export async function deployCurrencyToServer(
   return contract;
 }
 
-export async function transfer(to: string, amount: number) {
-  console.log(to, amount);
+export async function transfer(
+  server: string,
+  agent: string,
+  contract: string,
+  to: string,
+  value: number
+) {
+  const method = {
+    name: "transfer",
+    values: { to, value },
+  } as IMethod;
+  return await writeAgentContract(server, agent, contract, method);
+}
+
+export async function getAccountsFromServer(
+  server: string,
+  agent: string,
+  contract: string
+) {
+  const method = {
+    name: "get_accounts",
+    values: {},
+  } as IMethod;
+  return await readAgentContract(server, agent, contract, method);
 }
 
 export async function getBalanceFromServer(
@@ -82,7 +104,6 @@ export async function joinCurrencyContract(
   if (invite.contract) {
     callbackRegistry.onJoin[invite.contract] = () => {
       if (invite.contract) {
-        console.log("create account");
         const method = {
           name: "create_account",
           values: {},
@@ -90,10 +111,6 @@ export async function joinCurrencyContract(
         writeAgentContract(server, agent, invite.contract, method);
       }
     };
-    console.log(
-      "joining currency contract",
-      invite,
-    );
     joinContract(server, agent, invite);
   }
 }

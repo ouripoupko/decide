@@ -123,7 +123,6 @@ export async function joinContract(
     contract: invite.contract,
     profile: profile || "",
   });
-  console.log(body);
   const response = await fetch(
     `${server}/ibc/app/${agent}?action=join_contract`,
     {
