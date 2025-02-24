@@ -132,7 +132,7 @@ const Currency = () => {
       </div>
     </div>
   ) : (
-    <button disabled={joinRequested} onClick={joinCurrency}>
+    <button className={styles.button} disabled={joinRequested} onClick={joinCurrency}>
       Join
     </button>
   );
