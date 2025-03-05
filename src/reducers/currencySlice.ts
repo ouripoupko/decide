@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCurrencyContractFromServer } from "src/server/communityAPI";
+import { getCommunitySubContractFromServer } from "src/server/communityAPI";
 import {
   getAccountsFromServer,
   getBalanceFromServer,
@@ -15,10 +15,11 @@ export const readAccount = createAsyncThunk<any, void>(
     const { agent, server, allContracts } = state.gloki;
     const community = state.community.contract;
     if (agent && server && community) {
-      const invite = (await getCurrencyContractFromServer(
+      const invite = (await getCommunitySubContractFromServer(
         server,
         agent,
-        community
+        community,
+        "currency"
       )) as IInvite;
       if (invite && invite.contract) {
         dispatch(setInvite(invite));
@@ -87,4 +88,4 @@ const currencySlice = createSlice({
 });
 
 export const { setInvite, setContractExists } = currencySlice.actions;
-export default currencySlice.reducer;
+export const currencyReducer = currencySlice.reducer;

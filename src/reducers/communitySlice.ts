@@ -15,4 +15,4 @@ const communitySlice = createSlice({
 });
 
 export const { setContract } = communitySlice.actions;
-export default communitySlice.reducer;
+export const communityReducer = communitySlice.reducer;

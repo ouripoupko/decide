@@ -1,17 +1,27 @@
 import styles from "./Issues.module.scss";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getIssues } from "src/reducers/GlokiSlice";
-import { addIssueToServer } from "src/server/glokiAPI";
+import {
+  readDiscussionContract,
+  readIssues,
+} from "src/reducers/discussionSlice";
+import { callbackRegistry } from "src/reducers/serverListener";
+import {
+  addIssueToServer,
+  joinDiscussionContract,
+} from "src/server/discussionApi";
 import { AppDispatch, RootState } from "src/Store";
 
 const IssuesPage = () => {
-  const { agent, server, contract, contacts, issues } = useSelector(
-    (state: RootState) => {
-      return state?.gloki;
-    }
+  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const communityContract = useSelector(
+    (state: RootState) => state.community.contract
+  );
+  const { invite, contractExists, issues } = useSelector(
+    (state: RootState) => state.discussion
   );
   const [newIssue, setNewIssue] = useState("");
+  const [joinRequested, setJoinRequested] = useState(false);
   const dispatch: AppDispatch = useDispatch();
 
   const updateIssue = (issue: string) => {
@@ -19,36 +29,73 @@ const IssuesPage = () => {
   };
 
   const addNewIssue = () => {
-    if (server && agent && contract && newIssue.trim() !== "") {
-      addIssueToServer(server, agent, contract, newIssue);
+    if (server && agent && invite?.contract && newIssue.trim() !== "") {
+      addIssueToServer(server, agent, invite.contract, newIssue);
       setNewIssue("");
     }
   };
 
   useEffect(() => {
-    if (contract && contacts) {
-      dispatch(getIssues());
+    if (communityContract) {
+      dispatch(readDiscussionContract());
     }
-  }, [dispatch, contract, contacts]);
+  }, [dispatch, communityContract]);
 
-  return (
-      <div className={styles["issues"]}>
-        <h1 className={styles["title"]}>Issues</h1>
-        <div className={styles["new-issue"]}>
-          <h2 className={styles["input-title"]}> Subject</h2>
-          <textarea className={styles["issue-name-input"]}
-            placeholder="Your point for discussion..."
-            onChange={(e) => updateIssue(e.target.value)}
-            defaultValue={newIssue}
-          ></textarea>
-          <button className={styles["add-issue"] } onClick={addNewIssue}>Submit</button>
-        </div>
-        <div className={styles["issues-list"]}>
-          {issues?.map((issue, index) => (
-              <div className={styles["issue"]} key={index}>{issue}</div>
-          ))}
-        </div>
+  useEffect(() => {
+    if (contractExists && invite.contract) {
+      callbackRegistry.onWrite[invite.contract] = () => {
+        dispatch(readIssues());
+      };
+
+      dispatch(readIssues());
+
+      return () => {
+        // Unregister the listener
+        if (invite.contract) {
+          delete callbackRegistry.onWrite[invite.contract];
+        }
+      };
+    }
+  }, [dispatch, contractExists]);
+
+  const joinDiscussion = async () => {
+    if (server && agent && invite) {
+      setJoinRequested(true);
+      await joinDiscussionContract(server, agent, invite);
+    }
+  };
+
+  return contractExists ? (
+    <div className={styles["issues"]}>
+      <h1 className={styles["title"]}>Issues</h1>
+      <div className={styles["new-issue"]}>
+        <h2 className={styles["input-title"]}> Subject</h2>
+        <textarea
+          className={styles["issue-name-input"]}
+          placeholder="Your point for discussion..."
+          onChange={(e) => updateIssue(e.target.value)}
+          value={newIssue}
+        ></textarea>
+        <button className={styles["add-issue"]} onClick={addNewIssue}>
+          Submit
+        </button>
       </div>
+      <div className={styles["issues-list"]}>
+        {issues?.map((issue, index) => (
+          <div className={styles["issue"]} key={index}>
+            {issue}
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <button
+      className={styles.button}
+      disabled={joinRequested}
+      onClick={joinDiscussion}
+    >
+      Join
+    </button>
   );
 };
 

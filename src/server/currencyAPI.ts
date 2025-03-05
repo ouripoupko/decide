@@ -109,6 +109,7 @@ export async function joinCurrencyContract(
           values: {},
         } as IMethod;
         writeAgentContract(server, agent, invite.contract, method);
+        delete callbackRegistry.onJoin[invite.contract];
       }
     };
     joinContract(server, agent, invite);

@@ -9,6 +9,7 @@ import wotContract from "src/assets/contracts/wot_community_contract.py?raw";
 import gossipContract from "src/assets/contracts/gossip_community_contract.py?raw";
 import { deployCurrencyToServer } from "./currencyAPI";
 import { IInvite, IMethod } from "src/types/interfaces";
+import { deployDiscussionToServer } from "./discussionApi";
 
 export enum ECommunityType {
   WotCommunity,
@@ -25,6 +26,15 @@ const code = {
   [ECommunityType.GossipCommunity]: gossipContract,
 };
 
+
+async function setSubContract(server: string, agent: string, community: string, contract: string, name: string) {
+  const writeMethod = {
+    name: "set_sub_contract",
+    values: { name, invite: { server, agent, contract } },
+  } as IMethod;
+  writeAgentContract(server, agent, community, writeMethod);
+}
+
 export async function deployCommunityToServer(
   server: string,
   agent: string,
@@ -32,6 +42,7 @@ export async function deployCommunityToServer(
   type: ECommunityType
 ) {
   const currency = await deployCurrencyToServer(server, agent, name);
+  const discussion = await deployDiscussionToServer(server, agent, name);
   const community = await deployContract(
     server,
     agent,
@@ -41,23 +52,22 @@ export async function deployCommunityToServer(
     null,
     {}
   );
-  const writeMethod = {
-    name: "set_sub_contract",
-    values: { name: "currency", invite: { server, agent, contract: currency } },
-  } as IMethod;
-  writeAgentContract(server, agent, community, writeMethod);
+
+  setSubContract(server, agent, community, currency, "currency");
+  setSubContract(server, agent, community, discussion, "discussion");
 
   return community;
 }
 
-export async function getCurrencyContractFromServer(
+export async function getCommunitySubContractFromServer(
   server: string,
   agent: string,
-  contract: string
+  contract: string,
+  name: string
 ) {
   const method = {
     name: "get_sub_contract",
-    values: { name: "currency" },
+    values: { name },
   } as IMethod;
   return await readAgentContract(server, agent, contract, method);
 }

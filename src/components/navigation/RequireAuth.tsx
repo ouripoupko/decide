@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { getContacts, readProfile, startAgent } from "src/reducers/GlokiSlice";
+import { getContacts, readProfile, startAgent } from "src/reducers/glokiSlice";
 import { listenAgent } from "src/server/agent";
 import { AppDispatch, RootState } from "src/Store";
 import { IInvite } from "src/types/interfaces";
 import Loader from "../ui/loader/Loader";
 import { CompWithChildrenProps } from "src/types/types";
-import { serverlistener } from "src/reducers/serverListener";
+import { callbackRegistry, serverlistener } from "src/reducers/serverListener";
 
 const RequireAuth: React.FC<CompWithChildrenProps> = ({ children }) => {
   const navigate = useNavigate();
@@ -36,9 +36,16 @@ const RequireAuth: React.FC<CompWithChildrenProps> = ({ children }) => {
 
   // read agent profile after it was initialized
   useEffect(() => {
-    if(contract && !profile) {
+    if (contract && !profile) {
+      callbackRegistry.onWrite[contract] = () => {
+        dispatch(readProfile());
+      };
       dispatch(readProfile());
       dispatch(getContacts());
+
+      return () => {
+        delete callbackRegistry.onWrite[contract];
+      };
     }
   }, [dispatch, contract]);
 
