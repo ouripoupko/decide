@@ -8,6 +8,7 @@ import {
   setParametersToServer,
   transfer,
 } from "src/server/currencyAPI";
+import { callbackRegistry } from "src/reducers/serverListener";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,7 +18,9 @@ const Currency = () => {
   const [mintPreference, setMintPreference] = useState("");
   const [joinRequested, setJoinRequested] = useState(false);
 
-  const { server, agent, allContracts } = useSelector((state: RootState) => state.gloki);
+  const { server, agent, allContracts } = useSelector(
+    (state: RootState) => state.gloki
+  );
   const communityContract = useSelector(
     (state: RootState) => state.community.contract
   );
@@ -27,7 +30,7 @@ const Currency = () => {
   useEffect(() => {
     if (invite.contract && !contractExists) {
       dispatch(readAccount());
-      dispatch(readAccountsList());    
+      dispatch(readAccountsList());
     }
   }, [dispatch, allContracts]);
 
@@ -38,8 +41,19 @@ const Currency = () => {
   }, [dispatch, communityContract]);
 
   useEffect(() => {
-    if (invite) {
+    if (invite && invite.contract) {
+      callbackRegistry.onWrite[invite.contract] = () => {
+        dispatch(readAccount());
+        dispatch(readAccountsList());
+      };
+
       dispatch(readAccountsList());
+
+      return () => {
+        if (invite && invite.contract) {
+          delete callbackRegistry.onWrite[invite.contract];
+        }
+      };
     }
   }, [dispatch, invite]);
 
@@ -53,7 +67,6 @@ const Currency = () => {
         Number(transferAmount)
       );
       setTransferAmount(""); // Clear input after successful transfer
-      dispatch(readAccount()); // Refresh account details
     }
   };
 
@@ -67,7 +80,6 @@ const Currency = () => {
           Number(mintPreference),
           Number(burnPreference)
         );
-        dispatch(readAccount()); // Refresh account details
       } catch (error) {
         console.error("Failed to update preferences:", error);
       }
