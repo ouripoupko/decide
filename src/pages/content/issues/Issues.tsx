@@ -13,7 +13,7 @@ import {
 import { AppDispatch, RootState } from "src/Store";
 
 const IssuesPage = () => {
-  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const { server, agent, allContracts } = useSelector((state: RootState) => state.gloki);
   const communityContract = useSelector(
     (state: RootState) => state.community.contract
   );
@@ -34,6 +34,12 @@ const IssuesPage = () => {
       setNewIssue("");
     }
   };
+
+  useEffect(() => {
+    if (invite.contract && !contractExists) {
+      dispatch(readDiscussionContract());
+    }
+  }, [dispatch, allContracts]);
 
   useEffect(() => {
     if (communityContract) {
@@ -90,7 +96,6 @@ const IssuesPage = () => {
     </div>
   ) : (
     <button
-      className={styles.button}
       disabled={joinRequested}
       onClick={joinDiscussion}
     >

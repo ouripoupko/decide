@@ -1,5 +1,6 @@
 import store from "src/Store";
 import { readCommunities } from "./communitiesSlice";
+import { readContracts } from "./glokiSlice";
 
 interface IListener {
   [contract: string]: () => void;
@@ -20,9 +21,11 @@ export function serverlistener(data: string) {
         callbackRegistry.onWrite[message.contract]?.();
         break;
       case "deploy_contract":
+        store.dispatch(readContracts());
         store.dispatch(readCommunities());
         break;
       case "a2a_connect":
+        store.dispatch(readContracts());
         store.dispatch(readCommunities());
         callbackRegistry.onJoin[message.contract]?.();
         break;

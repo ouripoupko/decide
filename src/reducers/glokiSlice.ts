@@ -8,6 +8,7 @@ import {
   readProfileFromServer,
 } from "src/server/glokiAPI";
 import { RootState } from "src/Store";
+import { getAgentContracts } from "src/server/agent";
 
 export const startAgent = createAsyncThunk<IInvite, IInvite>(
   "gloki/startAgent",
@@ -27,6 +28,18 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
           ((await deployProfileContract(server, agent)) as string),
       } as IInvite;
       return reply;
+    }
+    return Promise.reject();
+  }
+);
+
+export const readContracts = createAsyncThunk<IContract[], void>(
+  "gloki/readContracts",
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const { agent, server } = state.gloki;
+    if (agent && server) {
+      return await getAgentContracts(server, agent);
     }
     return Promise.reject();
   }
@@ -85,6 +98,9 @@ const glokiSlice = createSlice({
       })
       .addCase(startAgent.rejected, (state) => {
         state.serverError = true;
+      })
+      .addCase(readContracts.fulfilled, (state, action) => {
+        state.allContracts = action.payload;
       })
       .addCase(readProfile.fulfilled, (state, action) => {
         state.profile = action.payload;

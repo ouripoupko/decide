@@ -17,12 +17,19 @@ const Currency = () => {
   const [mintPreference, setMintPreference] = useState("");
   const [joinRequested, setJoinRequested] = useState(false);
 
-  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const { server, agent, allContracts } = useSelector((state: RootState) => state.gloki);
   const communityContract = useSelector(
     (state: RootState) => state.community.contract
   );
   const { invite, contractExists, balance, preferences, parameters, partners } =
     useSelector((state: RootState) => state.currency);
+
+  useEffect(() => {
+    if (invite.contract && !contractExists) {
+      dispatch(readAccount());
+      dispatch(readAccountsList());    
+    }
+  }, [dispatch, allContracts]);
 
   useEffect(() => {
     if (communityContract) {
@@ -38,7 +45,13 @@ const Currency = () => {
 
   const handleTransfer = async () => {
     if (server && agent && invite?.contract && transferAmount && recipient) {
-      await transfer(server, agent, invite.contract, recipient, Number(transferAmount));
+      await transfer(
+        server,
+        agent,
+        invite.contract,
+        recipient,
+        Number(transferAmount)
+      );
       setTransferAmount(""); // Clear input after successful transfer
       dispatch(readAccount()); // Refresh account details
     }
@@ -87,7 +100,7 @@ const Currency = () => {
           onChange={(e) => setRecipient(e.target.value)}
         >
           <option value="">Select recipient</option>
-          {partners.map((partner) => (
+          {partners?.map((partner) => (
             <option key={partner} value={partner}>
               {partner}
             </option>
@@ -132,7 +145,11 @@ const Currency = () => {
       </div>
     </div>
   ) : (
-    <button className={styles.button} disabled={joinRequested} onClick={joinCurrency}>
+    <button
+      className={styles.button}
+      disabled={joinRequested}
+      onClick={joinCurrency}
+    >
       Join
     </button>
   );

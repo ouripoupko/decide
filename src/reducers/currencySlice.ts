@@ -48,8 +48,8 @@ export const readAccountsList = createAsyncThunk<any, void>(
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server } = state.gloki;
-    const invite = state.currency.invite;
-    if (agent && server && invite.contract) {
+    const { invite, contractExists } = state.currency;
+    if (agent && server && contractExists && invite.contract) {
       const accounts = await getAccountsFromServer(server, agent, invite.contract);
       return accounts;
     }
