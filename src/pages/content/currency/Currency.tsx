@@ -8,6 +8,7 @@ import {
   setParametersToServer,
   transfer,
 } from "src/server/currencyAPI";
+import { callbackRegistry } from "src/reducers/serverListener";
 
 const Currency = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,12 +18,21 @@ const Currency = () => {
   const [mintPreference, setMintPreference] = useState("");
   const [joinRequested, setJoinRequested] = useState(false);
 
-  const { server, agent } = useSelector((state: RootState) => state.gloki);
+  const { server, agent, allContracts } = useSelector(
+    (state: RootState) => state.gloki
+  );
   const communityContract = useSelector(
     (state: RootState) => state.community.contract
   );
   const { invite, contractExists, balance, preferences, parameters, partners } =
     useSelector((state: RootState) => state.currency);
+
+  useEffect(() => {
+    if (invite.contract && !contractExists) {
+      dispatch(readAccount());
+      dispatch(readAccountsList());
+    }
+  }, [dispatch, allContracts]);
 
   useEffect(() => {
     if (communityContract) {
@@ -31,16 +41,32 @@ const Currency = () => {
   }, [dispatch, communityContract]);
 
   useEffect(() => {
-    if (invite) {
+    if (invite && invite.contract) {
+      callbackRegistry.onWrite[invite.contract] = () => {
+        dispatch(readAccount());
+        dispatch(readAccountsList());
+      };
+
       dispatch(readAccountsList());
+
+      return () => {
+        if (invite && invite.contract) {
+          delete callbackRegistry.onWrite[invite.contract];
+        }
+      };
     }
   }, [dispatch, invite]);
 
   const handleTransfer = async () => {
     if (server && agent && invite?.contract && transferAmount && recipient) {
-      await transfer(server, agent, invite.contract, recipient, Number(transferAmount));
+      await transfer(
+        server,
+        agent,
+        invite.contract,
+        recipient,
+        Number(transferAmount)
+      );
       setTransferAmount(""); // Clear input after successful transfer
-      dispatch(readAccount()); // Refresh account details
     }
   };
 
@@ -54,7 +80,6 @@ const Currency = () => {
           Number(mintPreference),
           Number(burnPreference)
         );
-        dispatch(readAccount()); // Refresh account details
       } catch (error) {
         console.error("Failed to update preferences:", error);
       }
@@ -87,7 +112,7 @@ const Currency = () => {
           onChange={(e) => setRecipient(e.target.value)}
         >
           <option value="">Select recipient</option>
-          {partners.map((partner) => (
+          {partners?.map((partner) => (
             <option key={partner} value={partner}>
               {partner}
             </option>
@@ -132,7 +157,11 @@ const Currency = () => {
       </div>
     </div>
   ) : (
-    <button className={styles.button} disabled={joinRequested} onClick={joinCurrency}>
+    <button
+      className={styles.button}
+      disabled={joinRequested}
+      onClick={joinCurrency}
+    >
       Join
     </button>
   );
