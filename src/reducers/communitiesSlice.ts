@@ -28,4 +28,4 @@ const communitiesSlice = createSlice({
   },
 });
 
-export default communitiesSlice.reducer;
+export const communitiesReducer = communitiesSlice.reducer;

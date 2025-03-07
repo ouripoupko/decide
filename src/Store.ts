@@ -1,9 +1,10 @@
 // src/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import glokiReducer from "./reducers/GlokiSlice";
-import communitiesReducer from "./reducers/communitiesSlice";
-import communityReducer from "./reducers/communitySlice";
-import currencyReducer from "./reducers/currencySlice";
+import { glokiReducer } from "./reducers/glokiSlice";
+import { communitiesReducer } from "./reducers/communitiesSlice";
+import { communityReducer } from "./reducers/communitySlice";
+import { currencyReducer } from "./reducers/currencySlice";
+import { discussionReducer } from "./reducers/discussionSlice";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     communities: communitiesReducer,
     community: communityReducer,
     currency: currencyReducer,
+    discussion: discussionReducer,
   },
 });
 

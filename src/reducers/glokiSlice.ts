@@ -3,12 +3,12 @@ import { IContract, IContact, IInvite, IProfile } from "src/types/interfaces";
 import {
   deployProfileContract,
   getContactsFromServer,
-  getIssuesFromServer,
   PROFILE_CONTRACT_NAME,
   readAgentFromServer,
   readProfileFromServer,
 } from "src/server/glokiAPI";
 import { RootState } from "src/Store";
+import { getAgentContracts } from "src/server/agent";
 
 export const startAgent = createAsyncThunk<IInvite, IInvite>(
   "gloki/startAgent",
@@ -28,6 +28,18 @@ export const startAgent = createAsyncThunk<IInvite, IInvite>(
           ((await deployProfileContract(server, agent)) as string),
       } as IInvite;
       return reply;
+    }
+    return Promise.reject();
+  }
+);
+
+export const readContracts = createAsyncThunk<IContract[], void>(
+  "gloki/readContracts",
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const { agent, server } = state.gloki;
+    if (agent && server) {
+      return await getAgentContracts(server, agent);
     }
     return Promise.reject();
   }
@@ -61,36 +73,6 @@ export const getContacts = createAsyncThunk<IContact[], void>(
   }
 );
 
-export const getIssues = createAsyncThunk<void, void>(
-  "gloki/getIssues",
-  async (_, { getState, dispatch }) => {
-    const state = getState() as RootState;
-    const { agent, server, contract, contacts, isIssuesLoading } = state.gloki;
-    if (!isIssuesLoading) {
-      dispatch(clearIssues());
-
-      if (agent && server && contract) {
-        getIssuesFromServer(server, agent, contract).then((value) => {
-          dispatch(addIssue(value));
-        });
-      }
-      const promises = (contacts || []).map((contact) =>
-        getIssuesFromServer(
-          contact.server,
-          contact.agent,
-          contact.contract
-        ).then((value) => {
-          dispatch(addIssue(value)); // Dispatch for each result
-        })
-      );
-
-      // Wait for all promises to resolve
-      await Promise.all(promises);
-    }
-    return Promise.resolve();
-  }
-);
-
 const glokiSlice = createSlice({
   name: "gloki",
   initialState: {
@@ -101,19 +83,10 @@ const glokiSlice = createSlice({
     profile: undefined as IProfile | undefined,
     allContracts: [] as IContract[],
     contacts: undefined as IContact[] | undefined,
-    issues: [] as string[],
-    isIssuesLoading: false,
   },
   reducers: {
     setAllContracts: (state, action) => {
       state.allContracts = action.payload;
-    },
-    addIssue: (state, action) => {
-      state.issues.push(...action.payload);
-    },
-    clearIssues: (state) => {
-      state.issues = [];
-      state.isIssuesLoading = true;
     },
   },
   extraReducers: (builder) => {
@@ -126,6 +99,9 @@ const glokiSlice = createSlice({
       .addCase(startAgent.rejected, (state) => {
         state.serverError = true;
       })
+      .addCase(readContracts.fulfilled, (state, action) => {
+        state.allContracts = action.payload;
+      })
       .addCase(readProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
       })
@@ -137,15 +113,9 @@ const glokiSlice = createSlice({
       })
       .addCase(getContacts.rejected, (state) => {
         state.serverError = true;
-      })
-      .addCase(getIssues.fulfilled, (state) => {
-        state.isIssuesLoading = false;
-      })
-      .addCase(getIssues.rejected, (state) => {
-        state.isIssuesLoading = false;
       });
   },
 });
 
-export const { setAllContracts, addIssue, clearIssues } = glokiSlice.actions;
-export default glokiSlice.reducer;
+export const { setAllContracts } = glokiSlice.actions;
+export const glokiReducer = glokiSlice.reducer;

@@ -61,7 +61,7 @@ const router = createBrowserRouter(
       ),
       children: [
         { index: true, element: <Navigate to="issues" replace /> }, // Redirect to "issues" by default
-        { path: "issues", element: <div>issues</div> },
+        { path: "issues", element: <Issues /> },
         { path: "members", element: <div>members</div> },
         { path: "projects", element: <div>projects</div> },
         { path: "decisions", element: <div>decisions</div> },
