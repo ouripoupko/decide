@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getCommunitySubContractFromServer } from "src/server/communityAPI";
-import { getIssuesFromServer } from "src/server/discussionApi";
+import { getIssuesFromServer } from "src/server/issuesApi";
 import { RootState } from "src/Store";
-import { IInvite } from "src/types/interfaces";
+import { IInvite, IIssue } from "src/types/interfaces";
 
-export const readDiscussionContract = createAsyncThunk<any, void>(
-  "discussion/readDiscussionContract",
+export const readIssuesContract = createAsyncThunk<any, void>(
+  "issues/readIssuesContract",
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState;
     const { agent, server, allContracts } = state.gloki;
@@ -15,7 +15,7 @@ export const readDiscussionContract = createAsyncThunk<any, void>(
         server,
         agent,
         community,
-        "discussion"
+        "issues"
       )) as IInvite;
       if (invite && invite.contract) {
         dispatch(setInvite(invite));
@@ -27,11 +27,11 @@ export const readDiscussionContract = createAsyncThunk<any, void>(
 );
 
 export const readIssues = createAsyncThunk<any, void>(
-  "discussion/readIssues",
+  "issues/readIssues",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server } = state.gloki;
-    const { invite, contractExists } = state.discussion;
+    const { invite, contractExists } = state.issues;
     if (agent && server && contractExists && invite.contract) {
       return getIssuesFromServer(server, agent, invite.contract);
     }
@@ -39,12 +39,12 @@ export const readIssues = createAsyncThunk<any, void>(
   }
 );
 
-const discussionSlice = createSlice({
-  name: "discussion",
+const issuesSlice = createSlice({
+  name: "issues",
   initialState: {
     invite: {} as IInvite,
     contractExists: false,
-    issues: [],
+    issues: [] as IIssue[],
   },
   reducers: {
     setInvite: (state, action) => {
@@ -52,7 +52,7 @@ const discussionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(readDiscussionContract.fulfilled, (state, action) => {
+    builder.addCase(readIssuesContract.fulfilled, (state, action) => {
       state.contractExists = action.payload;
     });
     builder.addCase(readIssues.fulfilled, (state, action) => {
@@ -61,5 +61,5 @@ const discussionSlice = createSlice({
   },
 });
 
-export const { setInvite } = discussionSlice.actions;
-export const discussionReducer = discussionSlice.reducer;
+export const { setInvite } = issuesSlice.actions;
+export const issuesReducer = issuesSlice.reducer;

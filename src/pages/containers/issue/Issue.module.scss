@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f9f9; /* Light background */
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-around;
+  background-color: #001F3F; /* Dark blue */
+  padding: 16px;
+}
+
+.navItem {
+  color: #FFFFFF; /* White text */
+  text-decoration: none;
+  font-size: 18px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.navItem:hover {
+  background-color: #0056b3; /* Lighter blue */
+}
+
+.active {
+  background-color: #007BFF; /* Active state blue */
+  font-weight: bold;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 16px;
+  background-color: #FFFFFF; /* White content area */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

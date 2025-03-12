@@ -41,3 +41,8 @@ export interface IProfile {
   userPhoto: string;
   userBio: string;
 }
+
+export interface IIssue {
+  contract: string;
+  name: string;
+}

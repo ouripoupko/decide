@@ -1,28 +1,26 @@
 import styles from "./Issues.module.scss";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  readDiscussionContract,
-  readIssues,
-} from "src/reducers/discussionSlice";
+import { useNavigate } from "react-router-dom";
+import { readIssuesContract, readIssues } from "src/reducers/issuesSlice";
 import { callbackRegistry } from "src/reducers/serverListener";
-import {
-  addIssueToServer,
-  joinDiscussionContract,
-} from "src/server/discussionApi";
+import { addIssueToServer, joinIssuesContract } from "src/server/issuesApi";
 import { AppDispatch, RootState } from "src/Store";
 
 const IssuesPage = () => {
-  const { server, agent, allContracts } = useSelector((state: RootState) => state.gloki);
+  const { server, agent, allContracts } = useSelector(
+    (state: RootState) => state.gloki
+  );
   const communityContract = useSelector(
     (state: RootState) => state.community.contract
   );
   const { invite, contractExists, issues } = useSelector(
-    (state: RootState) => state.discussion
+    (state: RootState) => state.issues
   );
   const [newIssue, setNewIssue] = useState("");
   const [joinRequested, setJoinRequested] = useState(false);
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
 
   const updateIssue = (issue: string) => {
     setNewIssue(issue);
@@ -37,13 +35,13 @@ const IssuesPage = () => {
 
   useEffect(() => {
     if (invite.contract && !contractExists) {
-      dispatch(readDiscussionContract());
+      dispatch(readIssuesContract());
     }
   }, [dispatch, allContracts]);
 
   useEffect(() => {
     if (communityContract) {
-      dispatch(readDiscussionContract());
+      dispatch(readIssuesContract());
     }
   }, [dispatch, communityContract]);
 
@@ -64,10 +62,10 @@ const IssuesPage = () => {
     }
   }, [dispatch, contractExists]);
 
-  const joinDiscussion = async () => {
+  const joinIssues = async () => {
     if (server && agent && invite) {
       setJoinRequested(true);
-      await joinDiscussionContract(server, agent, invite);
+      await joinIssuesContract(server, agent, invite);
     }
   };
 
@@ -78,7 +76,7 @@ const IssuesPage = () => {
         <h2 className={styles["input-title"]}> Subject</h2>
         <textarea
           className={styles["issue-name-input"]}
-          placeholder="Your point for discussion..."
+          placeholder="What is your issue..."
           onChange={(e) => updateIssue(e.target.value)}
           value={newIssue}
         ></textarea>
@@ -88,17 +86,18 @@ const IssuesPage = () => {
       </div>
       <div className={styles["issues-list"]}>
         {issues?.map((issue, index) => (
-          <div className={styles["issue"]} key={index}>
-            {issue}
+          <div
+            className={styles["issue"]}
+            key={index}
+            onClick={() => navigate(`/issue/${issue.contract}`)}
+          >
+            {issue.name}
           </div>
         ))}
       </div>
     </div>
   ) : (
-    <button
-      disabled={joinRequested}
-      onClick={joinDiscussion}
-    >
+    <button disabled={joinRequested} onClick={joinIssues}>
       Join
     </button>
   );

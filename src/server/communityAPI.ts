@@ -9,7 +9,7 @@ import wotContract from "src/assets/contracts/wot_community_contract.py?raw";
 import gossipContract from "src/assets/contracts/gossip_community_contract.py?raw";
 import { deployCurrencyToServer } from "./currencyAPI";
 import { IInvite, IMethod } from "src/types/interfaces";
-import { deployDiscussionToServer } from "./discussionApi";
+import { deployIssuesToServer } from "./issuesApi";
 
 export enum ECommunityType {
   WotCommunity,
@@ -26,8 +26,13 @@ const code = {
   [ECommunityType.GossipCommunity]: gossipContract,
 };
 
-
-async function setSubContract(server: string, agent: string, community: string, contract: string, name: string) {
+async function setSubContract(
+  server: string,
+  agent: string,
+  community: string,
+  contract: string,
+  name: string
+) {
   const writeMethod = {
     name: "set_sub_contract",
     values: { name, invite: { server, agent, contract } },
@@ -42,7 +47,7 @@ export async function deployCommunityToServer(
   type: ECommunityType
 ) {
   const currency = await deployCurrencyToServer(server, agent, name);
-  const discussion = await deployDiscussionToServer(server, agent, name);
+  const issues = await deployIssuesToServer(server, agent, name);
   const community = await deployContract(
     server,
     agent,
@@ -54,7 +59,7 @@ export async function deployCommunityToServer(
   );
 
   setSubContract(server, agent, community, currency, "currency");
-  setSubContract(server, agent, community, discussion, "discussion");
+  setSubContract(server, agent, community, issues, "issues");
 
   return community;
 }

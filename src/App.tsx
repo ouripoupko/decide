@@ -16,6 +16,7 @@ import Issues from "./pages/content/issues/Issues";
 import Favorites from "./pages/content/favorites/Favorites";
 import QrScan from "./pages/content/qrscan/QrScan";
 import ShareContract from "./pages/content/share/ShareContract";
+import Issue from "./pages/containers/issue/Issue";
 
 const router = createBrowserRouter(
   [
@@ -66,6 +67,22 @@ const router = createBrowserRouter(
         { path: "projects", element: <div>projects</div> },
         { path: "decisions", element: <div>decisions</div> },
         { path: "currency", element: <Currency /> },
+        { path: "share", element: <ShareContract /> },
+      ],
+    },
+    {
+      path: "/issue/:id",
+      element: (
+        <RequireAuth>
+          <Issue />
+        </RequireAuth>
+      ),
+      children: [
+        { index: true, element: <Navigate to="discussion" replace /> }, // Redirect to "issues" by default
+        { path: "discussion", element: <div>discussion</div> },
+        { path: "proposals", element: <div>proposals</div> },
+        { path: "vote", element: <div>vote</div> },
+        { path: "outcome", element: <div>outcome</div> },
         { path: "share", element: <ShareContract /> },
       ],
     },

@@ -1,8 +1,9 @@
-import { IInvite, IMethod } from "src/types/interfaces";
+import { IInvite, IIssue, IMethod } from "src/types/interfaces";
 import { deployContract, joinContract, readAgentContract, writeAgentContract } from "./agent";
-import discussionContract from "src/assets/contracts/discussion_contract.py?raw";
+import issuesContract from "src/assets/contracts/issues_contract.py?raw";
+import { deployIssueToServer } from "./issueApi";
 
-export async function deployDiscussionToServer(
+export async function deployIssuesToServer(
   server: string,
   agent: string,
   name: string
@@ -11,15 +12,15 @@ export async function deployDiscussionToServer(
     server,
     agent,
     name,
-    "discussion_contract.py",
-    discussionContract,
+    "issues_contract.py",
+    issuesContract,
     null,
     {}
   );
   return contract;
 }
 
-export async function joinDiscussionContract(
+export async function joinIssuesContract(
   server: string,
   agent: string,
   invite: IInvite
@@ -38,7 +39,7 @@ export async function getIssuesFromServer(
     name: "get_issues",
     values: {},
   } as IMethod;
-  return await readAgentContract(server, agent, contract, method);
+  return await readAgentContract(server, agent, contract, method) as IIssue[];
 }
 
 export async function addIssueToServer(
@@ -47,9 +48,10 @@ export async function addIssueToServer(
   contract: string,
   issue: string
 ) {
+  const issueContract = await deployIssueToServer(server, agent, issue);
   const writeMethod = {
     name: "add_issue",
-    values: { text: issue },
+    values: { issue: {contract: issueContract, name: issue} as IIssue},
   } as IMethod;
   writeAgentContract(server, agent, contract, writeMethod);
 }

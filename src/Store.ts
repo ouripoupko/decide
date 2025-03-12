@@ -4,7 +4,7 @@ import { glokiReducer } from "./reducers/glokiSlice";
 import { communitiesReducer } from "./reducers/communitiesSlice";
 import { communityReducer } from "./reducers/communitySlice";
 import { currencyReducer } from "./reducers/currencySlice";
-import { discussionReducer } from "./reducers/discussionSlice";
+import { issuesReducer } from "./reducers/issuesSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ const store = configureStore({
     communities: communitiesReducer,
     community: communityReducer,
     currency: currencyReducer,
-    discussion: discussionReducer,
+    issues: issuesReducer,
   },
 });
 
