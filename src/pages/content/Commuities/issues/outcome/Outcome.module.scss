@@ -1,0 +1,169 @@
+.outcomeContainer {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.description {
+  margin: 0;
+  color: #5f6368;
+}
+
+.loading, .emptyState {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  p {
+    margin: 0;
+    color: #5f6368;
+  }
+}
+
+.error {
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #d93025;
+  font-size: 0.875rem;
+  background-color: #fce8e6;
+  border-radius: 4px;
+}
+
+.rankingList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rankingItem {
+  display: flex;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.rankBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #4285f4;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.25rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.proposalContent {
+  flex: 1;
+}
+
+.proposalHeader {
+  margin-bottom: 1rem;
+}
+
+.proposalTitle {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.proposalAuthor {
+  font-size: 0.75rem;
+  color: #5f6368;
+}
+
+.voteStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.voteCount {
+  font-size: 0.875rem;
+  color: #5f6368;
+}
+
+.progressBar {
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #4285f4;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.rankDistribution {
+  display: flex;
+  height: 70px;
+  gap: 8px;
+  margin-top: 0.5rem;
+}
+
+.rankBar {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #f1f3f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rankFill {
+  width: 100%;
+  background-color: #4285f4;
+  transition: height 0.3s ease;
+}
+
+.rankLabel {
+  position: absolute;
+  bottom: 5px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.legend {
+  padding: 1rem;
+  background-color: #f1f3f4;
+  border-radius: 8px;
+  
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #5f6368;
+    font-style: italic;
+  }
+}

@@ -8,15 +8,19 @@ import GdiMain from "./pages/containers/gdiMain/GdiMain";
 import Login from "src/pages/content/login/Login";
 import RequireAuth from "./components/navigation/RequireAuth";
 import Individual from "./pages/containers/individual/Individual";
-import Currency from "./pages/content/currency/Currency";
+import Currency from "./pages/content/Commuities/currency/Currency";
 import Community from "./pages/containers/community/Community";
 import Profile from "./pages/content/profile/Profile";
 import Communities from "./pages/content/Commuities/Communities"
-import Issues from "./pages/content/issues/Issues";
+import Issues from "./pages/content/Commuities/issues/Issues";
 import Favorites from "./pages/content/favorites/Favorites";
 import QrScan from "./pages/content/qrscan/QrScan";
 import ShareContract from "./pages/content/share/ShareContract";
 import Issue from "./pages/containers/issue/Issue";
+import Discussion from "./pages/content/Commuities/issues/discussion/Discussion";
+import Proposals from "./pages/content/Commuities/issues/proposals/Proposals";
+import Vote from "./pages/content/Commuities/issues/vote/Vote";
+import Outcome from "./pages/content/Commuities/issues/outcome/Outcome";
 
 const router = createBrowserRouter(
   [
@@ -79,10 +83,10 @@ const router = createBrowserRouter(
       ),
       children: [
         { index: true, element: <Navigate to="discussion" replace /> }, // Redirect to "issues" by default
-        { path: "discussion", element: <div>discussion</div> },
-        { path: "proposals", element: <div>proposals</div> },
-        { path: "vote", element: <div>vote</div> },
-        { path: "outcome", element: <div>outcome</div> },
+        { path: "discussion", element: <Discussion /> },
+        { path: "proposals", element: <Proposals /> },
+        { path: "vote", element: <Vote /> },
+        { path: "outcome", element: <Outcome /> },
         { path: "share", element: <ShareContract /> },
       ],
     },

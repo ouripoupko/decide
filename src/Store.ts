@@ -5,6 +5,7 @@ import { communitiesReducer } from "./reducers/communitiesSlice";
 import { communityReducer } from "./reducers/communitySlice";
 import { currencyReducer } from "./reducers/currencySlice";
 import { issuesReducer } from "./reducers/issuesSlice";
+import { issueReducer } from "./reducers/issueSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     community: communityReducer,
     currency: currencyReducer,
     issues: issuesReducer,
+    issue: issueReducer,
   },
 });
 
