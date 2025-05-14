@@ -46,3 +46,9 @@ export interface IIssue {
   contract: string;
   name: string;
 }
+
+export interface IIssueContent {
+  description: string;
+  proposals: string[];
+  votes: any;
+}

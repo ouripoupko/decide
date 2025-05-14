@@ -6,7 +6,7 @@ const communitySlice = createSlice({
     contract: undefined as string | undefined,
   },
   reducers: {
-    setContract: (state, action) => {
+    setCommunityContract: (state, action) => {
       state.contract = action.payload;
     },
   },
@@ -14,5 +14,5 @@ const communitySlice = createSlice({
   // },
 });
 
-export const { setContract } = communitySlice.actions;
+export const { setCommunityContract } = communitySlice.actions;
 export const communityReducer = communitySlice.reducer;

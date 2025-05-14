@@ -3,15 +3,16 @@ import styles from "./Issue.module.scss";
 import { useEffect } from "react";
 import { AppDispatch } from "src/Store";
 import { useDispatch } from "react-redux";
-import { setContract } from "src/reducers/communitySlice";
 import { ContainerContextType } from "src/types/types";
+import { readIssue, setIssueContract } from "src/reducers/issueSlice";
 
 const Issue = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setContract(id));
+    dispatch(setIssueContract(id));
+    dispatch(readIssue());
   }, [dispatch, id]);
 
   const navItems = [

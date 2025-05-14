@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCommunitySubContractFromServer } from "src/server/communityAPI";
-import { getIssuesFromServer } from "src/server/issuesApi";
+import { readIssueFromServer } from "src/server/issueApi";
 import { RootState } from "src/Store";
-import { IInvite } from "src/types/interfaces";
+import { IIssueContent } from "src/types/interfaces";
 
 
 export const addComment = createAsyncThunk<any, any>(
@@ -15,7 +14,7 @@ export const addComment = createAsyncThunk<any, any>(
 export const addProposal = createAsyncThunk<any, any>(
   "issue/addProposal",
   async (something) => {
-    console.log(something)
+    console.log('addProposal', something)
   }
 );
 
@@ -33,36 +32,14 @@ export const loadOutcome = createAsyncThunk<any, any>(
   }
 );
 
-export const readIssuesContract = createAsyncThunk<any, void>(
-  "issue/readIssuesContract",
-  async (_, { getState, dispatch }) => {
-    const state = getState() as RootState;
-    const { agent, server, allContracts } = state.gloki;
-    const community = state.community.contract;
-    if (agent && server && community) {
-      const invite = (await getCommunitySubContractFromServer(
-        server,
-        agent,
-        community,
-        "issues"
-      )) as IInvite;
-      if (invite && invite.contract) {
-        dispatch(setInvite(invite));
-        return allContracts.some((contract) => contract.id === invite.contract);
-      }
-    }
-    return Promise.reject();
-  }
-);
-
-export const readIssues = createAsyncThunk<any, void>(
-  "issue/readIssues",
+export const readIssue = createAsyncThunk<IIssueContent, void>(
+  "issue/readIssue",
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { agent, server } = state.gloki;
-    const { invite, contractExists } = state.issues;
-    if (agent && server && contractExists && invite.contract) {
-      return getIssuesFromServer(server, agent, invite.contract);
+    const { contract } = state.issue;
+    if (agent && server && contract) {
+      return await readIssueFromServer(server, agent, contract) as IIssueContent;
     }
     return Promise.reject();
   }
@@ -71,24 +48,27 @@ export const readIssues = createAsyncThunk<any, void>(
 const issueSlice = createSlice({
   name: "issue",
   initialState: {
+    contract: undefined as string | undefined,
     description: "",
     proposals: [] as string[], 
     votes: {} as {[agent: string]: number},
   },
   reducers: {
+    setIssueContract: (state, action) => {
+      state.contract = action.payload;
+    },
     setInvite: (state, action) => {
       // state.invite = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(readIssuesContract.fulfilled, (state, action) => {
-      // state.contractExists = action.payload;
-    });
-    builder.addCase(readIssues.fulfilled, (state, action) => {
-      // state.issues = action.payload;
+    builder.addCase(readIssue.fulfilled, (state, action) => {
+      state.description = action.payload.description;
+      state.proposals = action.payload.proposals;
+      state.votes = action.payload.votes;
     });
   },
 });
 
-export const { setInvite } = issueSlice.actions;
+export const { setIssueContract, setInvite } = issueSlice.actions;
 export const issueReducer = issueSlice.reducer;

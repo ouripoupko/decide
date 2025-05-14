@@ -17,3 +17,10 @@ class Issue:
 
     def get_proposals(self):
         return [self.proposals[key] for key in self.proposals]
+    
+    def get_issue(self):
+        return {
+            'description': self.get_description(),
+            'proposals': self.get_proposals,
+            'votes': {}
+        }

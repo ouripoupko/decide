@@ -3,7 +3,7 @@ import styles from "./Community.module.scss";
 import { useEffect } from "react";
 import { AppDispatch } from "src/Store";
 import { useDispatch } from "react-redux";
-import { setContract } from "src/reducers/communitySlice";
+import { setCommunityContract } from "src/reducers/communitySlice";
 import { ContainerContextType } from "src/types/types";
 
 const Community = () => {
@@ -11,7 +11,7 @@ const Community = () => {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setContract(id));
+    dispatch(setCommunityContract(id));
   }, [dispatch, id]);
 
   const navItems = [

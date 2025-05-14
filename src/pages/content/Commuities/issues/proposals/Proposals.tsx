@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styles from "./Proposals.module.scss";
 import { addProposal } from "src/reducers/issueSlice";
+import { AppDispatch } from "src/Store";
+import { useDispatch } from "react-redux";
 
 type ProposalsPropType = {
   issue?: {
@@ -13,15 +15,17 @@ const Proposals = ({ issue }: ProposalsPropType) => {
   const { loading, error } = { loading: false, error: false }; //useSelector(state => state.issue);
   const [newProposal, setNewProposal] = useState("");
   const [expanded, setExpanded] = useState({} as { [key: string]: Boolean });
+  const dispatch: AppDispatch = useDispatch();
 
   const handleSubmitProposal = async (e: any) => {
     e.preventDefault();
+    console.log("handleSubmitProposal", newProposal);
 
     if (!newProposal.trim()) {
       return;
     }
 
-    await addProposal(newProposal);
+    dispatch(addProposal(newProposal));
     setNewProposal("");
   };
 
