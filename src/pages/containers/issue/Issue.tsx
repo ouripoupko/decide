@@ -5,14 +5,23 @@ import { AppDispatch } from "src/Store";
 import { useDispatch } from "react-redux";
 import { ContainerContextType } from "src/types/types";
 import { readIssue, setIssueContract } from "src/reducers/issueSlice";
+import { callbackRegistry } from "src/reducers/serverListener";
 
 const Issue = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setIssueContract(id));
-    dispatch(readIssue());
+    if (id) {
+      callbackRegistry.onWrite[id] = () => {
+        dispatch(readIssue());
+      };
+      dispatch(setIssueContract(id));
+      dispatch(readIssue());
+      return () => {
+        delete callbackRegistry.onWrite[id];
+      };
+    }
   }, [dispatch, id]);
 
   const navItems = [
@@ -42,7 +51,7 @@ const Issue = () => {
         ))}
       </nav>
       <main className={styles.content}>
-        <Outlet context={context}/>
+        <Outlet context={context} />
       </main>
     </div>
   );

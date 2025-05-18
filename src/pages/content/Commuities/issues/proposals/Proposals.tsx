@@ -1,21 +1,21 @@
 import { useState } from "react";
 import styles from "./Proposals.module.scss";
-import { addProposal } from "src/reducers/issueSlice";
-import { AppDispatch } from "src/Store";
-import { useDispatch } from "react-redux";
+import { RootState } from "src/Store";
+import { useSelector } from "react-redux";
+import { writeProposalToServer } from "src/server/issueApi";
+import { IProposal } from "src/types/interfaces";
 
-type ProposalsPropType = {
-  issue?: {
-    proposals: any[];
-    creator: string;
-  };
-};
 
-const Proposals = ({ issue }: ProposalsPropType) => {
+const Proposals = () => {
   const { loading, error } = { loading: false, error: false }; //useSelector(state => state.issue);
   const [newProposal, setNewProposal] = useState("");
   const [expanded, setExpanded] = useState({} as { [key: string]: Boolean });
-  const dispatch: AppDispatch = useDispatch();
+  const { server, agent } = useSelector(
+    (state: RootState) => state.gloki
+  );
+  const { contract, proposals } = useSelector(
+    (state: RootState) => state.issue
+  );
 
   const handleSubmitProposal = async (e: any) => {
     e.preventDefault();
@@ -25,7 +25,11 @@ const Proposals = ({ issue }: ProposalsPropType) => {
       return;
     }
 
-    dispatch(addProposal(newProposal));
+    if(server && agent && contract) {
+      // todo: fill the missing fields
+      const proposal = {text: newProposal} as IProposal
+      await writeProposalToServer(server, agent, contract, proposal);
+    }
     setNewProposal("");
   };
 
@@ -35,8 +39,6 @@ const Proposals = ({ issue }: ProposalsPropType) => {
       [id]: !prev[id],
     }));
   };
-
-  const proposals = issue?.proposals || [];
 
   return (
     <div className={styles.proposalsContainer}>
@@ -80,12 +82,12 @@ const Proposals = ({ issue }: ProposalsPropType) => {
           </div>
         ) : (
           <ul className={styles.list}>
-            {proposals.map((proposal) => (
-              <li key={proposal.id} className={styles.proposalItem}>
+            {proposals.map((proposal) => ( // todo: fix the key
+              <li key={proposal.id+proposal.text} className={styles.proposalItem}>
                 <div className={styles.proposalHeader}>
                   <div className={styles.proposalAuthor}>
                     By:{" "}
-                    {proposal.author === issue?.creator
+                    {proposal.author === 'issue should have an author' // todo: fix the right issue author
                       ? "Author"
                       : proposal.author}
                   </div>

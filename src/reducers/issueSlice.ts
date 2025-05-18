@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { readIssueFromServer } from "src/server/issueApi";
 import { RootState } from "src/Store";
-import { IIssueContent } from "src/types/interfaces";
+import { IIssueContent, IProposal } from "src/types/interfaces";
 
 
 export const addComment = createAsyncThunk<any, any>(
@@ -50,7 +50,7 @@ const issueSlice = createSlice({
   initialState: {
     contract: undefined as string | undefined,
     description: "",
-    proposals: [] as string[], 
+    proposals: [] as IProposal[], 
     votes: {} as {[agent: string]: number},
   },
   reducers: {

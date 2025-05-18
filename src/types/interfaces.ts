@@ -47,8 +47,14 @@ export interface IIssue {
   name: string;
 }
 
+export interface IProposal {
+  text: string;
+  author: string;
+  timestamp: string;
+  id: string;
+}
 export interface IIssueContent {
   description: string;
-  proposals: string[];
+  proposals: IProposal[];
   votes: any;
 }
